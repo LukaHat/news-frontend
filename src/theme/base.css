@@ -1,0 +1,10 @@
+@import url("./reset.css");
+
+:root {
+  /* colors */
+  --color-black: rgb(10, 9, 8);
+  --color-white: rgb(242, 244, 243);
+  --color-primary: rgb(86, 136, 199);
+  --color-secondary: rgb(34, 51, 59);
+  --color-accent: rgb(24, 169, 153);
+}
