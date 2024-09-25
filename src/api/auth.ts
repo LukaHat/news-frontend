@@ -5,10 +5,8 @@ interface LoginData {
   password: string;
 }
 
-export const login = async (data: LoginData) => {
-  const res = await axios.post(
-    "http://localhost:3000/api-docs/auth/login",
-    data
-  );
-  console.log(res);
+export const login = async (data: LoginData): Promise<{ token: string }> => {
+  const res = await axios.post("http://localhost:3000/auth/login", data);
+  console.log(res.data);
+  return res.data;
 };
