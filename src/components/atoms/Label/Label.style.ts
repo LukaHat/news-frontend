@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
+import { themeColors } from "../../../theme/colors";
 
 export const Label = styled.label`
-  color: var(--color-black);
+  color: ${themeColors.primary.elementaryBlack};
   font-size: 1.3rem;
 `;

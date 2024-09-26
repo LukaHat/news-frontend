@@ -58,6 +58,7 @@ export default function SignIn({ redirectFn }: SignInProps) {
         <Label>Email</Label>
         <Input {...register("email")} placeholder="Enter your email" />
         {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+
         <Label>Password</Label>
         <Input
           {...register("password")}
@@ -65,6 +66,7 @@ export default function SignIn({ redirectFn }: SignInProps) {
           type="password"
         />
         {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
+
         <Button>Sign in</Button>
       </Form>
 

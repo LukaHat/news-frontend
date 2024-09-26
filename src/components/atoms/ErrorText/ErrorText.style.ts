@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
+import { themeColors } from "../../../theme/colors";
 
 export const ErrorText = styled.p`
-  color: var(--color-error);
+  color: ${themeColors.applicationStates.error};
 `;
