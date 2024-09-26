@@ -1,5 +1,3 @@
-import styled from "styled-components";
-
 import { Form } from "../../molecules/Form";
 import { Label } from "../../atoms/Label";
 import { Input } from "../../atoms/Input";
@@ -11,19 +9,8 @@ import { login } from "../../../api/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-
-const StyledWrapper = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-`;
-
-const ErrorText = styled.p`
-  color: var(--color-error);
-`;
+import { ErrorText } from "../../atoms/ErrorText";
+import { RedirectText } from "../../atoms/RedirectText";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email adress" }),
@@ -35,7 +22,11 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function SignIn() {
+interface SignInProps {
+  redirectFn: (isLoginPage: boolean) => void;
+}
+
+export default function SignIn({ redirectFn }: SignInProps) {
   const { setToken } = useAuth();
   const navigate = useNavigate();
 
@@ -62,16 +53,25 @@ export default function SignIn() {
   });
 
   return (
-    <StyledWrapper>
+    <>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Label>Email</Label>
-        <Input {...register("email")} placeholder="email" />
+        <Input {...register("email")} placeholder="Enter your email" />
         {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
         <Label>Password</Label>
-        <Input {...register("password")} placeholder="password" />
+        <Input
+          {...register("password")}
+          placeholder="Enter your password"
+          type="password"
+        />
         {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
         <Button>Sign in</Button>
       </Form>
-    </StyledWrapper>
+
+      <p>
+        New here?
+        <RedirectText onClick={() => redirectFn(false)}>Sign-in</RedirectText>
+      </p>
+    </>
   );
 }
