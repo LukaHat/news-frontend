@@ -5,8 +5,8 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 
 const StyledNavbar = styled.nav`
-  height: 8vh;
-  width: 100%;
+  height: 8dvh;
+  width: 100dvw;
   background-color: ${themeColors.primary.elementaryBlue};
   display: flex;
   justify-content: center;
