@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { themeColors } from "../../../theme/colors";
-import placeholder from "../../../assets/placeholder.jpg";
+import { appFonts } from "../../../theme/fonts";
+import placeholder from "../../../assets/images/placeholder.jpg";
 
 interface NewsArticleProps {
   article: {
@@ -18,19 +19,34 @@ interface NewsArticleProps {
 }
 
 const StyledNewsArticle = styled.li`
+  width: 90%;
+  height: 40vh;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: ${themeColors.primary.elementaryBlack};
+  color: ${themeColors.primary.elementaryWhite};
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid ${themeColors.primary.elementaryBlue};
+
   a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
     text-decoration: none;
     color: inherit;
   }
   h2 {
     font-size: 1.4rem;
+    margin-top: 1rem;
+    font-weight: bold;
+    font-family: ${appFonts.secondary.newsHeading};
+    text-align: center;
   }
   img {
-    height: 200px;
+    height: 15rem;
     width: auto;
   }
 `;
@@ -45,6 +61,10 @@ export default function NewsArticle({ article }: NewsArticleProps) {
     createdBy,
     createdAt,
   } = article;
+
+  const date = new Date(createdAt);
+
+  const formattedDate = date.toLocaleDateString();
 
   if (headline === "[Removed]") return;
 
@@ -65,7 +85,7 @@ export default function NewsArticle({ article }: NewsArticleProps) {
           <p>{shortDescription}</p>
           <p>
             <span>
-              {createdBy} | {createdAt}
+              {createdBy} {formattedDate}
             </span>
           </p>
         </div>

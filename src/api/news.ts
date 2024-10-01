@@ -6,16 +6,16 @@ interface NewsPostFrontPage {
   headline: string;
   shortDescription: string;
   imageUrl: string;
-  category: string;
   createdAt: string;
   isBreakingNews: boolean;
-  __v: number;
 }
 
 interface NewsPostDetail extends NewsPostFrontPage {
   lastEditedBy: string;
   fullDescription: string;
   lastEditedAt: string;
+  category: string;
+  __v: number;
 }
 
 export const getFrontPageNews = async (
@@ -41,7 +41,7 @@ export const getFrontPageNews = async (
 
 export const getNewsArticleById = async (
   token: string | undefined,
-  id: string | undefined
+  id: string
 ): Promise<NewsPostDetail | undefined> => {
   try {
     const response = await axios.get<NewsPostDetail>(

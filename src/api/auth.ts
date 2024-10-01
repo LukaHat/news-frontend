@@ -15,6 +15,7 @@ interface RegisterData {
 
 export const login = async (data: LoginData): Promise<{ token: string }> => {
   const res = await axios.post("http://localhost:3000/auth/login", data);
+  document.cookie = res.data.token;
   return res.data;
 };
 

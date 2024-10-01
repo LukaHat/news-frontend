@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/templates/ProtectedRoute";
 import { NewsDetail } from "./components/pages/NewsDetail";
+import { MainLayout } from "./components/templates/MainLayout";
 
 const queryClient = new QueryClient();
 
@@ -19,18 +20,13 @@ function App() {
               path="/"
               element={
                 <ProtectedRoute>
-                  <Homepage />
+                  <MainLayout />
                 </ProtectedRoute>
               }
-            />
-            <Route
-              path="/news/detail/:id"
-              element={
-                <ProtectedRoute>
-                  <NewsDetail />
-                </ProtectedRoute>
-              }
-            />
+            >
+              <Route path="/" element={<Homepage />} />
+              <Route path="/news/detail/:id" element={<NewsDetail />} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>

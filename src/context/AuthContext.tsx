@@ -17,9 +17,11 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | undefined>(undefined);
+  const [token, setToken] = useState<string>(document.cookie);
 
-  const isAuthenticated = token !== undefined && token !== "";
+  const login = (token: string) => (document.cookie = token);
+
+  const isAuthenticated = token !== "";
 
   return (
     <AuthContext.Provider value={{ token, isAuthenticated, setToken }}>
