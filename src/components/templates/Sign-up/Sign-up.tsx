@@ -27,7 +27,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export default function SignUp() {
-  const { setToken } = useAuth();
+  const { addToken } = useAuth();
   const navigate = useNavigate();
 
   const {
@@ -50,7 +50,7 @@ export default function SignUp() {
       return res;
     },
     onSuccess: (data) => {
-      setToken(data.token);
+      addToken(data.token);
       navigate("/");
     },
   });

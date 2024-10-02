@@ -28,13 +28,13 @@ const StyledNavbar = styled.nav`
 `;
 
 export default function Navbar() {
-  const { setToken } = useAuth();
+  const { addToken } = useAuth();
 
   return (
     <StyledNavbar>
       <NavLink to="/">News</NavLink>
       <div>
-        <Button onClick={() => setToken("")}>Logout</Button>
+        <Button onClick={() => addToken("")}>Logout</Button>
         <Button>New Post</Button>
       </div>
     </StyledNavbar>

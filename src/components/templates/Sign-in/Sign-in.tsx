@@ -27,7 +27,7 @@ interface SignInProps {
 }
 
 export default function SignIn({ redirectFn }: SignInProps) {
-  const { setToken } = useAuth();
+  const { addToken } = useAuth();
   const navigate = useNavigate();
 
   const {
@@ -47,7 +47,7 @@ export default function SignIn({ redirectFn }: SignInProps) {
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      setToken(data.token);
+      addToken(data.token);
       navigate("/");
     },
   });
