@@ -6,6 +6,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/templates/ProtectedRoute";
 import { NewsDetail } from "./components/pages/NewsDetail";
 import { MainLayout } from "./components/templates/MainLayout";
+import { ModalProvider } from "./context/ModalContext";
 
 const queryClient = new QueryClient();
 
@@ -19,9 +20,11 @@ function App() {
             <Route
               path="/"
               element={
-                <ProtectedRoute>
-                  <MainLayout />
-                </ProtectedRoute>
+                <ModalProvider>
+                  <ProtectedRoute>
+                    <MainLayout />
+                  </ProtectedRoute>
+                </ModalProvider>
               }
             >
               <Route path="/" element={<Homepage />} />

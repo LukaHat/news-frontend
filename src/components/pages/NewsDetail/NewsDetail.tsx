@@ -7,11 +7,16 @@ import styled from "styled-components";
 import { appFonts } from "../../../theme/fonts";
 import placeholder from "../../../assets/images/placeholder.jpg";
 import { themeColors } from "../../../theme/colors";
+import { addComment, getComments } from "../../../api/comment";
+import { Button } from "../../atoms/Button";
+import { Input } from "../../atoms/Input";
+import { useEffect, useState } from "react";
+import { Comment } from "../../molecules/Comment";
+import { useModal } from "../../../context/ModalContext";
 
 const StyledNewsDetail = styled.div`
-  font-family: ${appFonts.secondary.newsHeading};
   width: 100vw;
-  height: 91vh;
+  height: 100%;
   padding: 0.5vh 0;
   display: flex;
   flex-direction: column;
@@ -34,6 +39,7 @@ const StyledNewsDetail = styled.div`
   h2 {
     font-size: 2.2rem;
     font-weight: bold;
+    font-family: ${appFonts.secondary.newsHeading};
   }
   h3 {
     font-size: 1.8rem;
@@ -41,12 +47,21 @@ const StyledNewsDetail = styled.div`
     margin: 0.5rem 0;
     background-color: ${themeColors.secondary.expandedGreen};
     color: ${themeColors.primary.elementaryWhite};
+    font-family: ${appFonts.secondary.newsHeading};
   }
 `;
+interface ArticleComment {
+  comment: string;
+  commenter: string;
+  createdAt: string;
+}
 
 export default function NewsDetail() {
-  const { token } = useAuth();
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState<ArticleComment[]>([]);
+  const { token, user } = useAuth();
   const { id } = useParams();
+  const { openModal, setEditData } = useModal();
 
   const {
     data: article,
@@ -61,6 +76,31 @@ export default function NewsDetail() {
       }
     },
   });
+
+  useEffect(() => {
+    const fetchComments = (id: string | undefined) => {
+      const response = getComments(id);
+      if (response) {
+        setComments(response);
+      }
+    };
+    fetchComments(id);
+  }, [setComments, id]);
+
+  const handleAddComment = () => {
+    if (user?.fullName && id && comment.trim()) {
+      try {
+        addComment(user.fullName, comment.trim(), id);
+        setComment("");
+        const updatedComments = getComments(id);
+        if (updatedComments) {
+          setComments(updatedComments);
+        }
+      } catch (error) {
+        console.error("Error adding comment:", error);
+      }
+    }
+  };
 
   let formattedDateCreated;
   let formattedDateEdited;
@@ -94,11 +134,46 @@ export default function NewsDetail() {
         </p>
         <p>Viewed {article?.__v} times</p>
       </div>
+      {user?.fullName === article?.createdBy && (
+        <Button
+          onClick={() => {
+            openModal();
+            setEditData({
+              id: article?._id,
+              headline: article?.headline || "",
+              shortDescription: article?.shortDescription || "",
+              fullDescription: article?.fullDescription || "",
+              category: article?.category || "",
+              isBreakingNews: article?.isBreakingNews || false,
+              imageUrl: article?.imageUrl || "",
+            });
+          }}
+        >
+          Edit
+        </Button>
+      )}
       <div>
         <h3>{article?.category.toUpperCase()}</h3>
         <h2>{article?.headline}</h2>
         <p>{article?.fullDescription}</p>
       </div>
+      <section>
+        {comments.map((commentInstance) => (
+          <Comment
+            key={commentInstance.createdAt}
+            comment={commentInstance.comment}
+            commenter={commentInstance.commenter}
+            createdAt={commentInstance.createdAt}
+          />
+        ))}
+
+        <Input
+          type="textarea"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+        />
+        <Button onClick={handleAddComment}>Add comment</Button>
+      </section>
     </StyledNewsDetail>
   );
 }

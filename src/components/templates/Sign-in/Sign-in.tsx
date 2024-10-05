@@ -27,7 +27,7 @@ interface SignInProps {
 }
 
 export default function SignIn({ redirectFn }: SignInProps) {
-  const { addToken } = useAuth();
+  const { addToken, addUser, removeToken, token } = useAuth();
   const navigate = useNavigate();
 
   const {
@@ -38,7 +38,7 @@ export default function SignIn({ redirectFn }: SignInProps) {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = (data: FormData) => {
     mutation.mutate({
       ...data,
     });
@@ -47,7 +47,11 @@ export default function SignIn({ redirectFn }: SignInProps) {
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
+      if (token) {
+        removeToken();
+      }
       addToken(data.token);
+      addUser(data.user);
       navigate("/");
     },
   });

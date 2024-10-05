@@ -4,6 +4,7 @@ import { themeColors } from "../../../theme/colors";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { appFonts } from "../../../theme/fonts";
+import { useModal } from "../../../context/ModalContext";
 
 const StyledNavbar = styled.nav`
   height: 8vh;
@@ -29,13 +30,14 @@ const StyledNavbar = styled.nav`
 
 export default function Navbar() {
   const { addToken } = useAuth();
+  const { openModal } = useModal();
 
   return (
     <StyledNavbar>
       <NavLink to="/">News</NavLink>
       <div>
         <Button onClick={() => addToken("")}>Logout</Button>
-        <Button>New Post</Button>
+        <Button onClick={openModal}>New Post</Button>
       </div>
     </StyledNavbar>
   );

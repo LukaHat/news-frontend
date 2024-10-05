@@ -11,10 +11,10 @@ interface NewsArticleProps {
     headline: string;
     shortDescription: string;
     imageUrl: string;
-    category: string;
+    category?: string;
     createdAt: string;
     isBreakingNews: boolean;
-    __v: number;
+    __v?: number;
   };
 }
 
