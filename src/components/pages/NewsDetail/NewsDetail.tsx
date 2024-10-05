@@ -7,12 +7,9 @@ import styled from "styled-components";
 import { appFonts } from "../../../theme/fonts";
 import placeholder from "../../../assets/images/placeholder.jpg";
 import { themeColors } from "../../../theme/colors";
-import { addComment, getComments } from "../../../api/comment";
 import { Button } from "../../atoms/Button";
-import { Input } from "../../atoms/Input";
-import { useEffect, useState } from "react";
-import { Comment } from "../../molecules/Comment";
 import { useModal } from "../../../context/ModalContext";
+import { CommentSection } from "../../organisms/CommentSection";
 
 const StyledNewsDetail = styled.div`
   width: 100vw;
@@ -50,15 +47,8 @@ const StyledNewsDetail = styled.div`
     font-family: ${appFonts.secondary.newsHeading};
   }
 `;
-interface ArticleComment {
-  comment: string;
-  commenter: string;
-  createdAt: string;
-}
 
 export default function NewsDetail() {
-  const [comment, setComment] = useState("");
-  const [comments, setComments] = useState<ArticleComment[]>([]);
   const { token, user } = useAuth();
   const { id } = useParams();
   const { openModal, setEditData } = useModal();
@@ -76,31 +66,6 @@ export default function NewsDetail() {
       }
     },
   });
-
-  useEffect(() => {
-    const fetchComments = (id: string | undefined) => {
-      const response = getComments(id);
-      if (response) {
-        setComments(response);
-      }
-    };
-    fetchComments(id);
-  }, [setComments, id]);
-
-  const handleAddComment = () => {
-    if (user?.fullName && id && comment.trim()) {
-      try {
-        addComment(user.fullName, comment.trim(), id);
-        setComment("");
-        const updatedComments = getComments(id);
-        if (updatedComments) {
-          setComments(updatedComments);
-        }
-      } catch (error) {
-        console.error("Error adding comment:", error);
-      }
-    }
-  };
 
   let formattedDateCreated;
   let formattedDateEdited;
@@ -157,23 +122,7 @@ export default function NewsDetail() {
         <h2>{article?.headline}</h2>
         <p>{article?.fullDescription}</p>
       </div>
-      <section>
-        {comments.map((commentInstance) => (
-          <Comment
-            key={commentInstance.createdAt}
-            comment={commentInstance.comment}
-            commenter={commentInstance.commenter}
-            createdAt={commentInstance.createdAt}
-          />
-        ))}
-
-        <Input
-          type="textarea"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        />
-        <Button onClick={handleAddComment}>Add comment</Button>
-      </section>
+      <CommentSection id={id} />
     </StyledNewsDetail>
   );
 }
