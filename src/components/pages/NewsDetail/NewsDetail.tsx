@@ -10,16 +10,19 @@ import { Button } from "../../atoms/Button";
 import { useModal } from "../../hooks/useModal";
 import { CommentSection } from "../../organisms/CommentSection";
 import { useAuth } from "../../hooks/useAuth";
-import { flexContainerColumn } from "../../../styles/utils/mixins";
+import {
+  flexContainer,
+  flexContainerColumn,
+} from "../../../styles/utils/mixins";
+import { Loader } from "../../atoms/Loader";
 
 const StyledNewsDetail = styled.div`
-  width: 100vw;
-  height: 100%;
   padding: 0.5vh 0;
   ${flexContainerColumn}
   align-items: center;
   justify-content: flex-start;
   background-color: ${themeColors.primary.elementaryBlack};
+  min-height: 91vh;
 
   .image-container {
     width: 70%;
@@ -40,21 +43,37 @@ const StyledNewsDetail = styled.div`
     width: 70%;
     padding: 0.5% 15%;
     color: ${themeColors.primary.elementaryWhite};
+    p {
+      font-size: ${appFonts.fontSizes.p};
+    }
+
+    h2 {
+      font-size: ${appFonts.fontSizes.headings.h2};
+      font-weight: bold;
+      font-family: ${appFonts.secondary.secondaryFont};
+    }
+
+    h3 {
+      font-size: ${appFonts.fontSizes.headings.h3};
+      padding: 1rem;
+      margin: 0.5rem 0;
+      background-color: ${themeColors.secondary.expandedGreen};
+      color: ${themeColors.primary.elementaryWhite};
+      font-family: ${appFonts.secondary.secondaryFont};
+    }
   }
 
-  h2 {
-    font-size: 2.2rem;
-    font-weight: bold;
-    font-family: ${appFonts.secondary.secondaryFont};
+  .buttons {
+    ${flexContainer}
+    gap: 0.5rem;
   }
 
-  h3 {
-    font-size: 1.8rem;
-    padding: 1rem;
-    margin: 0.5rem 0;
-    background-color: ${themeColors.secondary.expandedGreen};
-    color: ${themeColors.primary.elementaryWhite};
-    font-family: ${appFonts.secondary.secondaryFont};
+  @media screen and (max-width: 768px) {
+    .image-container {
+      img {
+        height: 15rem;
+      }
+    }
   }
 `;
 
@@ -85,8 +104,8 @@ export default function NewsDetail() {
     formattedDateEdited = new Date(article.lastEditedAt).toLocaleDateString();
   }
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <ErrorText>Error</ErrorText>;
+  if (isLoading) return <Loader />;
+  if (error) return <ErrorText>{error.message}</ErrorText>;
 
   return (
     <StyledNewsDetail>
@@ -111,7 +130,7 @@ export default function NewsDetail() {
         <p>Viewed {article?.__v} times</p>
       </div>
       {user?.fullName === article?.createdBy && (
-        <>
+        <div className="buttons">
           <Button
             onClick={() => {
               openModal();
@@ -136,7 +155,7 @@ export default function NewsDetail() {
           >
             Delete
           </Button>
-        </>
+        </div>
       )}
       <div className="text-content">
         <h3>{article?.category.toUpperCase()}</h3>

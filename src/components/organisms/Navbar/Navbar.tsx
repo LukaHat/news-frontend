@@ -16,7 +16,7 @@ const StyledNavbar = styled.nav`
   font-family: ${appFonts.primary.mainFont};
   color: ${themeColors.primary.elementaryWhite};
   a {
-    font-size: 2rem;
+    font-size: ${appFonts.fontSizes.headings.h1};
     color: inherit;
     text-decoration: none;
     padding-left: 1rem;

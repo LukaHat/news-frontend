@@ -65,7 +65,6 @@ export const createPost = async (
 
     const response = await post("news", formData, token);
 
-    console.log("RESPONSE:", response);
     return response.data;
   } catch (error) {
     console.error(error);

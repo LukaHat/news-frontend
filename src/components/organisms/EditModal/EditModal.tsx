@@ -3,13 +3,11 @@ import { themeColors } from "../../../theme/colors";
 import { Button } from "../../atoms/Button";
 import { appFonts } from "../../../theme/fonts";
 import { Form } from "../../molecules/Form";
-import { Label } from "../../atoms/Label";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createPost, updateArticle } from "../../../api/news";
-import { ErrorText } from "../../atoms/ErrorText";
 import { useModal } from "../../hooks/useModal";
 import { useAuth } from "../../hooks/useAuth";
 import { FormField } from "../../molecules/FormField";
@@ -29,16 +27,16 @@ const StyledEditModalBackground = styled.div`
 `;
 
 const StyledEditModal = styled.div`
-  width: 40vw;
+  width: clamp(80%, 80vw, 30%);
   height: 50vh;
   background-color: ${themeColors.primary.elementaryBlue};
   color: ${themeColors.primary.elementaryWhite};
   ${flexContainerColumn}
   gap: 2rem;
   padding-top: 4vh;
-  font-size: 2rem;
-  h1 {
+  h3 {
     font-family: ${appFonts.primary.mainFont};
+    font-size: ${appFonts.fontSizes.headings.h3};
   }
   button {
     font-size: 1.4rem;
@@ -47,13 +45,13 @@ const StyledEditModal = styled.div`
   }
   div {
     ${flexContainer}
-    width: 70%;
+    min-width: 70%;
     justify-content: space-between;
   }
   form {
     color: ${themeColors.primary.elementaryWhite};
-    width: 70%;
-    ${flexContainer}
+    width: clamp(90%, 70%, 60%);
+    ${flexContainer};
     justify-content: space-evenly;
     div {
       width: 100%;
@@ -63,6 +61,19 @@ const StyledEditModal = styled.div`
     }
     button {
       align-self: flex-end;
+    }
+  }
+  @media (min-width: 768px) and (max-width: 1100px) {
+    width: clamp(70vw, 50vw, 40vw);
+    form {
+      width: clamp(85%, 70%, 60%);
+    }
+  }
+  @media (min-width: 1101px) {
+    width: clamp(50vw, 40vw, 35%);
+
+    form {
+      width: clamp(80%, 60%, 40%);
     }
   }
 `;
@@ -79,8 +90,8 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "Post has to have a category" })
     .max(10, { message: "Post category can have at most 10 characters" }),
-  isBreakingNews: z.enum(["true", "false"]).transform((val) => val === "true"),
-  imageUrl: z.any(),
+  isBreakingNews: z.boolean(),
+  imageUrl: z.any().optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -88,6 +99,7 @@ type FormData = z.infer<typeof formSchema>;
 export default function EditModal() {
   const { closeModal, editData } = useModal();
   const { token } = useAuth();
+  const queryClient = useQueryClient();
 
   const defaultValues = editData || {
     headline: "",
@@ -113,16 +125,20 @@ export default function EditModal() {
       data: FormData;
     }) => {
       if (editData) {
-        return updateArticle(token, editData?.id, { ...data });
+        return updateArticle(token, editData?.id, data);
       } else {
         return createPost(token, data);
       }
     },
-    onSuccess: (data) => {
-      console.log(data);
-    },
-    onError: (error) => {
-      console.error("Error creating post:", error);
+    onSuccess: () => {
+      if (editData) {
+        queryClient.invalidateQueries({
+          queryKey: ["newsDetails", editData.id],
+        });
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["frontPageNews"] });
+      }
+      closeModal();
     },
   });
 
@@ -134,7 +150,7 @@ export default function EditModal() {
     <StyledEditModalBackground>
       <StyledEditModal>
         <div>
-          <h1>{editData ? "Edit post" : "Add new post"}</h1>
+          <h3>{editData ? "Edit post" : "Add new post"}</h3>
           <Button onClick={closeModal}>&times;</Button>
         </div>
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -158,16 +174,12 @@ export default function EditModal() {
             error={errors.category && errors.category.message}
             register={register("category")}
           />
-          <div>
-            <Label>Breaking news?</Label>
-            <select defaultValue="false" {...register("isBreakingNews")}>
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
-          </div>
-          {errors.isBreakingNews && (
-            <ErrorText>{errors.isBreakingNews.message}</ErrorText>
-          )}
+          <FormField
+            label="Breaking news?"
+            error={errors.isBreakingNews && errors.isBreakingNews.message}
+            type="checkbox"
+            register={register("isBreakingNews")}
+          />
           <FormField
             label="Image"
             register={register("imageUrl")}

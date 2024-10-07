@@ -89,7 +89,6 @@ video {
   font: inherit;
   vertical-align: baseline;
 }
-/* HTML5 display-role reset for older browsers */
 article,
 aside,
 details,
@@ -132,6 +131,13 @@ button {
 }
 * {
   font-size: 14px;
+}
+htlm,
+body {
+  height: 100%;
+  min-width: 100vw;
+  margin: 0;
+  padding: 0;
 }
 button {
   cursor: pointer;

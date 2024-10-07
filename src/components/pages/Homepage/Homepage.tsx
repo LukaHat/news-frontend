@@ -4,6 +4,7 @@ import { ErrorText } from "../../atoms/ErrorText";
 import { useAuth } from "../../hooks/useAuth";
 import { NewsArticle } from "../../organisms/NewsArticle";
 import styled from "styled-components";
+import { Loader } from "../../atoms/Loader";
 
 const StyledNewsList = styled.ul`
   display: grid;
@@ -12,11 +13,12 @@ const StyledNewsList = styled.ul`
   justify-items: center;
   align-items: center;
   gap: 2rem;
-  @media screen and (max-width: 1024px) {
+  @media screen and (max-width: 1510px) {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+    padding: 3vh 0;
   }
-  @media screen and (max-width: 425px) {
+  @media screen and (max-width: 575px) {
     grid-template-columns: repeat(1, 1fr);
     gap: 1rem;
   }
@@ -37,8 +39,8 @@ export default function Homepage() {
     },
   });
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <ErrorText>Error</ErrorText>;
+  if (isLoading) return <Loader />;
+  if (error) return <ErrorText>{error.message}</ErrorText>;
 
   return (
     <StyledNewsList>

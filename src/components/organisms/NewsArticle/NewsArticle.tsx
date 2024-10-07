@@ -47,6 +47,42 @@ const StyledNewsArticle = styled.li`
     height: 15rem;
     width: auto;
   }
+
+  @media screen and (max-width: 425px) {
+    width: 80%;
+    height: 25vh;
+
+    img {
+      height: 8rem;
+      width: auto;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      font-weight: bold;
+      font-family: ${appFonts.secondary.secondaryFont};
+      text-align: center;
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    width: 80%;
+    height: 25vh;
+
+    img {
+      height: 8rem;
+      width: auto;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      font-weight: bold;
+      font-family: ${appFonts.secondary.secondaryFont};
+      text-align: center;
+    }
+  }
 `;
 
 export default function NewsArticle({ article }: NewsArticleProps) {
