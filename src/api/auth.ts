@@ -1,21 +1,5 @@
 import { post } from "./base";
-
-interface LoginData {
-  email: string;
-  password: string;
-}
-
-interface RegisterData extends LoginData {
-  role: string;
-  fullName: string;
-  alias: string;
-}
-
-interface AuthUser extends RegisterData {
-  _id: string;
-  registeredAt: string;
-  __v: number;
-}
+import { LoginData, RegisterData, AuthUser } from "../types/AuthTypes";
 
 export const login = async (
   data: LoginData

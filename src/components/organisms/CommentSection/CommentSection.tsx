@@ -5,17 +5,12 @@ import { addComment, getComments } from "../../../api/comment";
 import { Comment } from "../../molecules/Comment";
 import styled from "styled-components";
 import { useAuth } from "../../hooks/useAuth";
-
-interface ArticleComment {
-  comment: string;
-  commenter: string;
-  createdAt: string;
-}
+import { ArticleComment } from "../../../types/CommentTypes";
+import { flexContainerColumn } from "../../../styles/utils/mixins";
 
 const StyledCommentSection = styled.section`
   width: 70%;
-  display: flex;
-  flex-direction: column;
+  ${flexContainerColumn}
   align-items: flex-start;
   justify-content: flex-start;
   padding-bottom: 1rem;

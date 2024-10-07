@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
-import { getNewsArticleById } from "../../../api/news";
+import { useNavigate, useParams } from "react-router-dom";
+import { deleteArticle, getNewsArticleById } from "../../../api/news";
 import { ErrorText } from "../../atoms/ErrorText";
 import styled from "styled-components";
 import { appFonts } from "../../../theme/fonts";
@@ -10,13 +10,13 @@ import { Button } from "../../atoms/Button";
 import { useModal } from "../../hooks/useModal";
 import { CommentSection } from "../../organisms/CommentSection";
 import { useAuth } from "../../hooks/useAuth";
+import { flexContainerColumn } from "../../../styles/utils/mixins";
 
 const StyledNewsDetail = styled.div`
   width: 100vw;
   height: 100%;
   padding: 0.5vh 0;
-  display: flex;
-  flex-direction: column;
+  ${flexContainerColumn}
   align-items: center;
   justify-content: flex-start;
   background-color: ${themeColors.primary.elementaryBlack};
@@ -62,6 +62,7 @@ export default function NewsDetail() {
   const { token, user } = useAuth();
   const { id } = useParams();
   const { openModal, setEditData } = useModal();
+  const navigate = useNavigate();
 
   const {
     data: article,
@@ -110,22 +111,32 @@ export default function NewsDetail() {
         <p>Viewed {article?.__v} times</p>
       </div>
       {user?.fullName === article?.createdBy && (
-        <Button
-          onClick={() => {
-            openModal();
-            setEditData({
-              id: article?._id,
-              headline: article?.headline || "",
-              shortDescription: article?.shortDescription || "",
-              fullDescription: article?.fullDescription || "",
-              category: article?.category || "",
-              isBreakingNews: article?.isBreakingNews || false,
-              imageUrl: article?.imageUrl || "",
-            });
-          }}
-        >
-          Edit
-        </Button>
+        <>
+          <Button
+            onClick={() => {
+              openModal();
+              setEditData({
+                id: article?._id,
+                headline: article?.headline || "",
+                shortDescription: article?.shortDescription || "",
+                fullDescription: article?.fullDescription || "",
+                category: article?.category || "",
+                isBreakingNews: article?.isBreakingNews || false,
+                imageUrl: article?.imageUrl || "",
+              });
+            }}
+          >
+            Edit
+          </Button>
+          <Button
+            onClick={() => {
+              deleteArticle(token, id);
+              navigate(-1);
+            }}
+          >
+            Delete
+          </Button>
+        </>
       )}
       <div className="text-content">
         <h3>{article?.category.toUpperCase()}</h3>

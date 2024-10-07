@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 interface EditDataInterface {
   id: string | undefined;
@@ -22,8 +22,10 @@ export const ModalContext = React.createContext<ModalContextType | undefined>(
   undefined
 );
 export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editData, setEditData] = useState<EditDataInterface | null>(null);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [editData, setEditData] = React.useState<EditDataInterface | null>(
+    null
+  );
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);

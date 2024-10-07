@@ -22,10 +22,6 @@ const StyledNewsList = styled.ul`
   }
 `;
 
-const StyledHomepage = styled.div`
-  width: 100%;
-`;
-
 export default function Homepage() {
   const { token } = useAuth();
 
@@ -45,12 +41,10 @@ export default function Homepage() {
   if (error) return <ErrorText>Error</ErrorText>;
 
   return (
-    <StyledHomepage>
-      <StyledNewsList>
-        {news?.map((article) => (
-          <NewsArticle article={article} key={article._id} />
-        ))}
-      </StyledNewsList>
-    </StyledHomepage>
+    <StyledNewsList>
+      {news?.map((article) => (
+        <NewsArticle article={article} key={article._id} />
+      ))}
+    </StyledNewsList>
   );
 }

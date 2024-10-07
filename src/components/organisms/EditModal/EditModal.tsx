@@ -13,6 +13,10 @@ import { ErrorText } from "../../atoms/ErrorText";
 import { useModal } from "../../hooks/useModal";
 import { useAuth } from "../../hooks/useAuth";
 import { FormField } from "../../molecules/FormField";
+import {
+  flexContainer,
+  flexContainerColumn,
+} from "../../../styles/utils/mixins";
 
 const StyledEditModalBackground = styled.div`
   position: fixed;
@@ -21,9 +25,7 @@ const StyledEditModalBackground = styled.div`
   background-color: ${themeColors.secondary.expandedBlack};
   width: 100%;
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flexContainer}
 `;
 
 const StyledEditModal = styled.div`
@@ -31,11 +33,8 @@ const StyledEditModal = styled.div`
   height: 50vh;
   background-color: ${themeColors.primary.elementaryBlue};
   color: ${themeColors.primary.elementaryWhite};
-  display: flex;
-  align-items: center;
+  ${flexContainerColumn}
   gap: 2rem;
-  justify-content: center;
-  flex-direction: column;
   padding-top: 4vh;
   font-size: 2rem;
   h1 {
@@ -47,16 +46,14 @@ const StyledEditModal = styled.div`
     background-color: ${themeColors.secondary.expandedGreen};
   }
   div {
-    display: flex;
-    align-items: center;
+    ${flexContainer}
     width: 70%;
     justify-content: space-between;
   }
   form {
     color: ${themeColors.primary.elementaryWhite};
     width: 70%;
-    display: flex;
-    align-items: center;
+    ${flexContainer}
     justify-content: space-evenly;
     div {
       width: 100%;
@@ -70,7 +67,7 @@ const StyledEditModal = styled.div`
   }
 `;
 
-const addSchema = z.object({
+const formSchema = z.object({
   headline: z.string().min(1, { message: "Post has to have a headline" }),
   shortDescription: z
     .string()
@@ -86,7 +83,7 @@ const addSchema = z.object({
   imageUrl: z.any(),
 });
 
-type FormData = z.infer<typeof addSchema>;
+type FormData = z.infer<typeof formSchema>;
 
 export default function EditModal() {
   const { closeModal, editData } = useModal();
@@ -105,7 +102,7 @@ export default function EditModal() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({ resolver: zodResolver(addSchema), defaultValues });
+  } = useForm<FormData>({ resolver: zodResolver(formSchema), defaultValues });
 
   const mutation = useMutation({
     mutationFn: ({

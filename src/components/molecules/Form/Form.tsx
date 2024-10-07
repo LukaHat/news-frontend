@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import { flexContainerColumn } from "../../../styles/utils/mixins";
 
 const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
+  ${flexContainerColumn};
   gap: 0.4rem;
 `;
 

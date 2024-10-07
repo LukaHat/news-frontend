@@ -1,8 +1,4 @@
-interface ArticleComment {
-  comment: string;
-  commenter: string;
-  createdAt: string;
-}
+import { ArticleComment } from "../types/CommentTypes";
 
 export const addComment = (
   userName: string,

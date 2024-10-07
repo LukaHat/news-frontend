@@ -5,14 +5,14 @@ import { NavLink } from "react-router-dom";
 import { appFonts } from "../../../theme/fonts";
 import { useModal } from "../../hooks/useModal";
 import { useAuth } from "../../hooks/useAuth";
+import { flexContainer } from "../../../styles/utils/mixins";
 
 const StyledNavbar = styled.nav`
   height: 8vh;
   width: 100%;
   background-color: ${themeColors.primary.elementaryBlue};
-  display: flex;
+  ${flexContainer}
   justify-content: space-between;
-  align-items: center;
   font-family: ${appFonts.primary.mainFont};
   color: ${themeColors.primary.elementaryWhite};
   a {

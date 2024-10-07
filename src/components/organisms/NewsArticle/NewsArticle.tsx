@@ -3,6 +3,10 @@ import styled from "styled-components";
 import { themeColors } from "../../../theme/colors";
 import { appFonts } from "../../../theme/fonts";
 import placeholder from "../../../assets/images/placeholder.jpg";
+import {
+  flexContainer,
+  flexContainerColumn,
+} from "../../../styles/utils/mixins";
 
 interface NewsArticleProps {
   article: {
@@ -25,16 +29,10 @@ const StyledNewsArticle = styled.li`
   border-radius: 0.5rem;
   background-color: ${themeColors.primary.elementaryBlack};
   color: ${themeColors.primary.elementaryWhite};
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${flexContainer}
 
   a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-
+    ${flexContainerColumn}
     text-decoration: none;
     color: inherit;
   }
@@ -42,7 +40,7 @@ const StyledNewsArticle = styled.li`
     font-size: 1.4rem;
     margin-top: 1rem;
     font-weight: bold;
-    font-family: ${appFonts.secondary.newsHeading};
+    font-family: ${appFonts.secondary.secondaryFont};
     text-align: center;
   }
   img {

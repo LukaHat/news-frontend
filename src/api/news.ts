@@ -1,33 +1,11 @@
 import placeholder from "../assets/images/placeholder.jpg";
 import { NewsDetail } from "../components/pages/NewsDetail";
-import { patch, post, get, getById } from "./base";
-
-interface NewsPostFrontPage {
-  _id: string;
-  createdBy: string;
-  headline: string;
-  shortDescription: string;
-  imageUrl: string;
-  createdAt: string;
-  isBreakingNews: boolean;
-}
-
-interface NewsPostDetail extends NewsPostFrontPage {
-  lastEditedBy: string;
-  fullDescription: string;
-  lastEditedAt: string;
-  category: string;
-  __v: number;
-}
-
-interface CreateArticle {
-  headline: string;
-  shortDescription: string;
-  imageUrl?: string;
-  isBreakingNews: boolean;
-  fullDescription: string;
-  category: string;
-}
+import { patch, post, get, getById, remove } from "./base";
+import {
+  NewsPostFrontPage,
+  NewsPostDetail,
+  CreateArticle,
+} from "../types/NewsTypes";
 
 export const getFrontPageNews = async (
   token: string | undefined
@@ -108,6 +86,25 @@ export const updateArticle = async (
       throw new Error("Article ID must be passed and valid");
     }
     const response = await patch("news/", token, articleId, articleData);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const deleteArticle = async (
+  token: string | undefined,
+  articleId: string | undefined
+): Promise<string | undefined> => {
+  try {
+    if (!token) {
+      throw new Error("Token must be passed and valid");
+    }
+    if (!articleId) {
+      throw new Error("Article ID must be passed and valid");
+    }
+    const response = await remove("news/", token, articleId);
     return response.data;
   } catch (error) {
     console.error(error);

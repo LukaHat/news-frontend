@@ -77,3 +77,18 @@ export const patch = async (
     throw error;
   }
 };
+
+export const remove = async (url: string, token: string, id: string) => {
+  try {
+    const res = await axios.delete(`${BASE_URL}${url}/${id}`, {
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

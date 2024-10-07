@@ -1,16 +1,6 @@
 import React from "react";
 import { useCookies } from "react-cookie";
-
-interface AuthUser {
-  _id: string;
-  role: string;
-  email: string;
-  password: string;
-  fullName: string;
-  alias: string;
-  registeredAt: string;
-  __v: number;
-}
+import { AuthUser } from "../types/AuthTypes";
 
 interface AuthContextType {
   token: string | undefined;

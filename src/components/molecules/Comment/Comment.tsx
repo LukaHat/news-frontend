@@ -1,13 +1,15 @@
 import styled from "styled-components";
 import { themeColors } from "../../../theme/colors";
 import { appFonts } from "../../../theme/fonts";
+import { ArticleComment } from "../../../types/CommentTypes";
+import { flexContainerColumn } from "../../../styles/utils/mixins";
 
 const StyledComment = styled.p`
+  ${flexContainerColumn};
+  align-items: flex-start;
   width: 100%;
   height: auto;
   color: ${themeColors.primary.elementaryWhite};
-  display: flex;
-  flex-direction: column;
   margin: 0.3rem 0;
   padding: 0;
   font-size: ${appFonts.fontSizes.comment.commentText};
@@ -24,12 +26,6 @@ const StyledComment = styled.p`
     color: ${themeColors.secondary.expandedWhite};
   }
 `;
-
-interface ArticleComment {
-  comment: string;
-  commenter: string;
-  createdAt: string;
-}
 
 export default function Comment({
   comment,
