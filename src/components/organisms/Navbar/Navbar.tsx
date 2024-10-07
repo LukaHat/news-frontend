@@ -1,0 +1,57 @@
+import styled from "styled-components";
+import { Button } from "../../atoms/Button";
+import { themeColors } from "../../../theme/colors";
+import { NavLink } from "react-router-dom";
+import { appFonts } from "../../../theme/fonts";
+import { useModal } from "../../hooks/useModal";
+import { useAuth } from "../../hooks/useAuth";
+import { flexContainer } from "../../../styles/utils/mixins";
+
+const StyledNavbar = styled.nav`
+  height: 8vh;
+  width: 100%;
+  background-color: ${themeColors.primary.elementaryBlue};
+  ${flexContainer}
+  justify-content: space-between;
+  font-family: ${appFonts.primary.mainFont};
+  color: ${themeColors.primary.elementaryWhite};
+  a {
+    font-size: ${appFonts.fontSizes.headings.h1};
+    color: inherit;
+    text-decoration: none;
+    padding-left: 1rem;
+  }
+  div {
+    display: flex;
+    justify-content: space-between;
+    margin-right: 2rem;
+  }
+`;
+
+export default function Navbar() {
+  const { removeToken } = useAuth();
+  const { openModal, setEditData } = useModal();
+
+  return (
+    <StyledNavbar>
+      <NavLink to="/">News</NavLink>
+      <div>
+        <Button
+          onClick={() => {
+            removeToken();
+          }}
+        >
+          Logout
+        </Button>
+        <Button
+          onClick={() => {
+            setEditData(null);
+            openModal();
+          }}
+        >
+          New Post
+        </Button>
+      </div>
+    </StyledNavbar>
+  );
+}
