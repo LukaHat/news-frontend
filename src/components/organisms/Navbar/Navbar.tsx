@@ -2,9 +2,9 @@ import styled from "styled-components";
 import { Button } from "../../atoms/Button";
 import { themeColors } from "../../../theme/colors";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext";
 import { appFonts } from "../../../theme/fonts";
-import { useModal } from "../../../context/ModalContext";
+import { useModal } from "../../hooks/useModal";
+import { useAuth } from "../../hooks/useAuth";
 
 const StyledNavbar = styled.nav`
   height: 8vh;
@@ -29,15 +29,28 @@ const StyledNavbar = styled.nav`
 `;
 
 export default function Navbar() {
-  const { addToken } = useAuth();
-  const { openModal } = useModal();
+  const { removeToken } = useAuth();
+  const { openModal, setEditData } = useModal();
 
   return (
     <StyledNavbar>
       <NavLink to="/">News</NavLink>
       <div>
-        <Button onClick={() => addToken("")}>Logout</Button>
-        <Button onClick={openModal}>New Post</Button>
+        <Button
+          onClick={() => {
+            removeToken();
+          }}
+        >
+          Logout
+        </Button>
+        <Button
+          onClick={() => {
+            setEditData(null);
+            openModal();
+          }}
+        >
+          New Post
+        </Button>
       </div>
     </StyledNavbar>
   );

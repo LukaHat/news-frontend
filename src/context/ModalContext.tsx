@@ -13,28 +13,17 @@ interface EditDataInterface {
 interface ModalContextType {
   openModal: () => void;
   closeModal: () => void;
-  setEditData: (data: EditDataInterface) => void;
+  setEditData: (data: EditDataInterface | null) => void;
   isModalOpen: boolean;
-  editData: EditDataInterface | Record<string, never>;
+  editData: EditDataInterface | null;
 }
 
-const ModalContext = React.createContext<ModalContextType | undefined>(
+export const ModalContext = React.createContext<ModalContextType | undefined>(
   undefined
 );
-
-export const useModal = () => {
-  const context = React.useContext(ModalContext);
-  if (!context) {
-    throw Error("useModal needs to be used withnin an ModalProvider");
-  }
-  return context;
-};
-
 export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editData, setEditData] = useState<
-    EditDataInterface | Record<string, never>
-  >({});
+  const [editData, setEditData] = useState<EditDataInterface | null>(null);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);

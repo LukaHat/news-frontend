@@ -6,10 +6,10 @@ import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { ErrorText } from "../../atoms/ErrorText";
 import { registerUser } from "../../../api/auth";
+import { useAuth } from "../../hooks/useAuth";
 
 const formSchema = z.object({
   firstName: z.string().min(1, { message: "First name is required" }),
@@ -50,7 +50,7 @@ export default function SignUp() {
       return res;
     },
     onSuccess: (data) => {
-      addToken(data.token);
+      if (data?.token) addToken(data.token);
       navigate("/");
     },
   });

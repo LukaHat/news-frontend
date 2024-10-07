@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getFrontPageNews } from "../../../api/news";
 import { ErrorText } from "../../atoms/ErrorText";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 import { NewsArticle } from "../../organisms/NewsArticle";
 import styled from "styled-components";
 

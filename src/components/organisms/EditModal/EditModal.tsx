@@ -4,15 +4,15 @@ import { Button } from "../../atoms/Button";
 import { appFonts } from "../../../theme/fonts";
 import { Form } from "../../molecules/Form";
 import { Label } from "../../atoms/Label";
-import { Input } from "../../atoms/Input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { createPost, updateArticle } from "../../../api/news";
 import { ErrorText } from "../../atoms/ErrorText";
-import { useAuth } from "../../../context/AuthContext";
-import { useModal } from "../../../context/ModalContext";
+import { useModal } from "../../hooks/useModal";
+import { useAuth } from "../../hooks/useAuth";
+import { FormField } from "../../molecules/FormField";
 
 const StyledEditModalBackground = styled.div`
   position: fixed;
@@ -137,34 +137,30 @@ export default function EditModal() {
     <StyledEditModalBackground>
       <StyledEditModal>
         <div>
-          <h1>Add new post</h1>
+          <h1>{editData ? "Edit post" : "Add new post"}</h1>
           <Button onClick={closeModal}>&times;</Button>
         </div>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <Label>Headline</Label>
-            <Input {...register("headline")} />
-          </div>
-          {errors.headline && <ErrorText>{errors.headline.message}</ErrorText>}
-          <div>
-            <Label>Short description</Label>
-            <Input {...register("shortDescription")} />
-          </div>
-          {errors.shortDescription && (
-            <ErrorText>{errors.shortDescription.message}</ErrorText>
-          )}
-          <div>
-            <Label>Long description</Label>
-            <Input {...register("fullDescription")} />
-          </div>
-          {errors.fullDescription && (
-            <ErrorText>{errors.fullDescription.message}</ErrorText>
-          )}
-          <div>
-            <Label>Category</Label>
-            <Input {...register("category")} />
-          </div>
-          {errors.category && <ErrorText>{errors.category.message}</ErrorText>}
+          <FormField
+            label="Headline"
+            error={errors.headline && errors.headline.message}
+            register={register("headline")}
+          />
+          <FormField
+            label="Short description"
+            error={errors.shortDescription && errors.shortDescription.message}
+            register={register("shortDescription")}
+          />
+          <FormField
+            label="Full description"
+            error={errors.fullDescription && errors.fullDescription.message}
+            register={register("fullDescription")}
+          />
+          <FormField
+            label="Category"
+            error={errors.category && errors.category.message}
+            register={register("category")}
+          />
           <div>
             <Label>Breaking news?</Label>
             <select defaultValue="false" {...register("isBreakingNews")}>
@@ -175,10 +171,11 @@ export default function EditModal() {
           {errors.isBreakingNews && (
             <ErrorText>{errors.isBreakingNews.message}</ErrorText>
           )}
-          <div>
-            <Label>Image</Label>
-            <Input type="file" {...register("imageUrl")} />
-          </div>
+          <FormField
+            label="Image"
+            register={register("imageUrl")}
+            type="file"
+          />
           <Button>{editData ? "Edit Post" : "Add post"}</Button>
         </Form>
       </StyledEditModal>

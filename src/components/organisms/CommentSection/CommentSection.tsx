@@ -1,15 +1,39 @@
 import { useEffect, useState } from "react";
 import { Button } from "../../atoms/Button";
 import { Input } from "../../atoms/Input";
-import { useAuth } from "../../../context/AuthContext";
 import { addComment, getComments } from "../../../api/comment";
 import { Comment } from "../../molecules/Comment";
+import styled from "styled-components";
+import { useAuth } from "../../hooks/useAuth";
 
 interface ArticleComment {
   comment: string;
   commenter: string;
   createdAt: string;
 }
+
+const StyledCommentSection = styled.section`
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-bottom: 1rem;
+`;
+
+const StyledCommentList = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 20vh;
+  overflow-y: scroll;
+  margin-bottom: 1rem;
+  align-items: flex-start;
+`;
+const StyledInputContainer = styled.div`
+  align-self: center;
+  width: auto;
+`;
 
 export default function CommentSection({ id }: { id: string | undefined }) {
   const [comments, setComments] = useState<ArticleComment[]>([]);
@@ -43,22 +67,28 @@ export default function CommentSection({ id }: { id: string | undefined }) {
   };
 
   return (
-    <section>
-      {comments.map((commentInstance) => (
-        <Comment
-          key={commentInstance.createdAt}
-          comment={commentInstance.comment}
-          commenter={commentInstance.commenter}
-          createdAt={commentInstance.createdAt}
-        />
-      ))}
+    <StyledCommentSection>
+      {comments.length > 0 && (
+        <StyledCommentList>
+          {comments.map((commentInstance) => (
+            <Comment
+              key={commentInstance.createdAt}
+              comment={commentInstance.comment}
+              commenter={commentInstance.commenter}
+              createdAt={commentInstance.createdAt}
+            />
+          ))}
+        </StyledCommentList>
+      )}
 
-      <Input
-        type="textarea"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-      />
-      <Button onClick={handleAddComment}>Add comment</Button>
-    </section>
+      <StyledInputContainer>
+        <Input
+          type="textarea"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+        />
+        <Button onClick={handleAddComment}>Comment</Button>
+      </StyledInputContainer>
+    </StyledCommentSection>
   );
 }

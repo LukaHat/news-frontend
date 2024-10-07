@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { Navbar } from "../../organisms/Navbar";
 import { EditModal } from "../../organisms/EditModal";
-import { useModal } from "../../../context/ModalContext";
+import { useModal } from "../../hooks/useModal";
 
 export default function MainLayout() {
   const { isModalOpen } = useModal();

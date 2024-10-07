@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
-import { useAuth } from "../../../context/AuthContext";
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function ProtectedRoute({ children }: PropsWithChildren) {
   const { isAuthenticated } = useAuth();

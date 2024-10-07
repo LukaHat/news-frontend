@@ -1,6 +1,6 @@
-import axios from "axios";
 import placeholder from "../assets/images/placeholder.jpg";
 import { NewsDetail } from "../components/pages/NewsDetail";
+import { patch, post, get, getById } from "./base";
 
 interface NewsPostFrontPage {
   _id: string;
@@ -33,19 +33,15 @@ export const getFrontPageNews = async (
   token: string | undefined
 ): Promise<NewsPostFrontPage[] | undefined> => {
   try {
-    const response = await axios.get<NewsPostFrontPage[]>(
-      "http://localhost:3000/news/front-page",
-      {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    if (!token) {
+      throw new Error("Token must be passed and valid");
+    }
+    const response = await get<NewsPostFrontPage[]>("news/front-page", token);
     const newsData = response.data;
     return newsData;
   } catch (error) {
-    console.error("Error fetching news:", error);
+    console.error(error);
+    throw error;
   }
 };
 
@@ -54,19 +50,15 @@ export const getNewsArticleById = async (
   id: string
 ): Promise<NewsPostDetail | undefined> => {
   try {
-    const response = await axios.get<NewsPostDetail>(
-      `http://localhost:3000/news/${id}`,
-      {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    if (!token) {
+      throw new Error("Token must be passed and valid");
+    }
+    const response = await getById<NewsPostDetail>("news/", token, id);
     const articleData = response.data;
     return articleData;
   } catch (error) {
-    console.error("Error fetching news article:", error);
+    console.error(error);
+    throw error;
   }
 };
 
@@ -76,7 +68,7 @@ export const createPost = async (
 ): Promise<NewsPostDetail | undefined> => {
   try {
     if (!token) {
-      throw new Error("Authorization token is missing");
+      throw new Error("Token must be passed and valid");
     }
 
     const formData = new FormData();
@@ -93,13 +85,7 @@ export const createPost = async (
       formData.append("image", placeholder);
     }
 
-    const response = await axios.post("http://localhost:3000/news", formData, {
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "mutipart/form-data",
-      },
-    });
+    const response = await post("news", formData, token);
 
     console.log("RESPONSE:", response);
     return response.data;
@@ -115,20 +101,16 @@ export const updateArticle = async (
   articleData: Partial<typeof NewsDetail>
 ): Promise<NewsPostDetail | undefined> => {
   try {
-    console.log("REQ DATA:", token, "Now the id", articleId, articleData);
-    const response = await axios.patch(
-      `http://localhost:3000/news/${articleId}`,
-      articleData,
-      {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    console.log("RESPONSE:", response);
+    if (!token) {
+      throw new Error("Token must be passed and valid");
+    }
+    if (!articleId) {
+      throw new Error("Article ID must be passed and valid");
+    }
+    const response = await patch("news/", token, articleId, articleData);
     return response.data;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };

@@ -16,7 +16,11 @@ export const addComment = (
       createdAt: new Date().toISOString(),
     };
 
-    if (!userName || !comment || !articleId) return "Error";
+    if (!userName || !comment || !articleId) {
+      throw new Error(
+        "User name, comment and article ID must be passed and valid"
+      );
+    }
 
     const existingComments: ArticleComment[] = JSON.parse(
       localStorage.getItem(`comments_${articleId}`) || "[]"
@@ -31,6 +35,7 @@ export const addComment = (
     );
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 
@@ -38,18 +43,16 @@ export const getComments = (
   articleId: string | undefined
 ): ArticleComment[] | undefined => {
   try {
-    if (!articleId) return undefined;
+    if (!articleId) throw new Error("Article ID must be passed and valid");
 
     const response = localStorage.getItem(`comments_${articleId}`);
     if (response === null) return undefined;
 
     const parsedComments = JSON.parse(response);
 
-    console.log("Parsed Comments:", parsedComments);
-
     return Array.isArray(parsedComments) ? parsedComments : undefined;
   } catch (error) {
     console.error(error);
-    return undefined;
+    throw error;
   }
 };

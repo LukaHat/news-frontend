@@ -7,10 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { login } from "../../../api/auth";
 import { useMutation } from "@tanstack/react-query";
-import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { ErrorText } from "../../atoms/ErrorText";
 import { RedirectText } from "../../atoms/RedirectText";
+import { useAuth } from "../../hooks/useAuth";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email adress" }),
@@ -27,7 +27,7 @@ interface SignInProps {
 }
 
 export default function SignIn({ redirectFn }: SignInProps) {
-  const { addToken, addUser, removeToken, token } = useAuth();
+  const { addToken, addUser } = useAuth();
   const navigate = useNavigate();
 
   const {
@@ -47,11 +47,10 @@ export default function SignIn({ redirectFn }: SignInProps) {
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      if (token) {
-        removeToken();
+      if (data?.token && data.user) {
+        addToken(data.token);
+        addUser(data.user);
       }
-      addToken(data.token);
-      addUser(data.user);
       navigate("/");
     },
   });
