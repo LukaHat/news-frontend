@@ -1,13 +1,27 @@
 import axios, { AxiosResponse } from "axios";
 
-export const BASE_URL = "http://localhost:3000/";
+const baseAPIClient = axios.create({
+  baseURL: "http://localhost:3000/",
+});
 
-export const get = async <T>(
-  url: string,
-  token: string
+interface RequestProps {
+  token?: string;
+  method?: "get" | "patch" | "post" | "delete";
+  url: string;
+  id?: string;
+  data?: unknown;
+}
+
+export const request = async <T>(
+  params: RequestProps
 ): Promise<AxiosResponse<T>> => {
+  const { token, url, method, id, data } = params;
+
   try {
-    const res = await axios.get(`${BASE_URL}${url}`, {
+    const res = await baseAPIClient.request({
+      method: method || "get",
+      url: id ? `${url}/${id}` : url,
+      data,
       headers: {
         accept: "application/json",
         Authorization: `Bearer ${token}`,
@@ -17,78 +31,7 @@ export const get = async <T>(
     return res;
   } catch (error) {
     console.error(error);
-    throw error;
-  }
-};
 
-export const getById = async <T>(
-  url: string,
-  token: string,
-  id: string
-): Promise<AxiosResponse<T>> => {
-  try {
-    const res = await axios.get(`${BASE_URL}${url}/${id}`, {
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return res;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-export const post = async (url: string, data: unknown, token?: string) => {
-  try {
-    const res = await axios.post(`${BASE_URL}${url}`, data, {
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return res;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-export const patch = async (
-  url: string,
-  token: string,
-  id: string,
-  data: unknown
-) => {
-  try {
-    const res = await axios.patch(`${BASE_URL}${url}/${id}`, data, {
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return res;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-export const remove = async (url: string, token: string, id: string) => {
-  try {
-    const res = await axios.delete(`${BASE_URL}${url}/${id}`, {
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return res;
-  } catch (error) {
-    console.error(error);
     throw error;
   }
 };

@@ -1,12 +1,14 @@
 import styled from "@emotion/styled";
 import { themeColors } from "../../../theme/colors";
-import { appFonts } from "../../../theme/fonts";
+import { typographyEmotion } from "../../../theme/typography/typography";
+import { spacings } from "../../../theme/spacings";
+import { radius } from "../../../theme/radius";
 
 export const Button = styled.button`
   background-color: ${themeColors.primary.elementaryBlue};
   color: ${themeColors.primary.elementaryWhite};
-  padding: 0.4rem;
-  border-radius: 0.2rem;
-  font-size: ${appFonts.fontSizes.button};
+  padding: ${spacings.paddings.xs};
+  border-radius: ${radius.xs};
+  ${typographyEmotion.text.lg};
   cursor: pointer;
 `;

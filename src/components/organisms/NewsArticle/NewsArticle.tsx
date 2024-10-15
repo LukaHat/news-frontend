@@ -1,12 +1,17 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { themeColors } from "../../../theme/colors";
-import { appFonts } from "../../../theme/fonts";
 import placeholder from "../../../assets/images/placeholder.jpg";
 import {
   flexContainer,
   flexContainerColumn,
 } from "../../../styles/utils/mixins";
+import { formatDate } from "../../../lib/helper/helper";
+import { shadows } from "../../../theme/shadows";
+import { typography } from "../../../theme/typography";
+import { mediaQueries } from "../../../theme/mediaQueries";
+import { radius } from "../../../theme/radius";
+import { spacings } from "../../../theme/spacings";
 
 interface NewsArticleProps {
   article: {
@@ -23,34 +28,41 @@ interface NewsArticleProps {
 }
 
 const StyledNewsArticle = styled.li`
-  width: 90%;
+  width: 100%;
   height: 40vh;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  background-color: ${themeColors.primary.elementaryBlack};
-  color: ${themeColors.primary.elementaryWhite};
+  border-radius: ${radius.sm};
+  transition: 400ms;
   ${flexContainer}
+
+  &:hover {
+    box-shadow: ${shadows.baseHoverShadow};
+  }
 
   a {
     ${flexContainerColumn}
     text-decoration: none;
     color: inherit;
   }
+
+  img {
+    max-width: 100%;
+  }
+
   h2 {
-    font-size: 1.4rem;
-    margin-top: 1rem;
+    ${typography.headings.sm}
+    font-family: ${typography.secondary.secondaryFont};
     font-weight: bold;
-    font-family: ${appFonts.secondary.secondaryFont};
+    text-align: center;
+    margin-top: ${spacings.margins.sm};
+    font-weight: bold;
     text-align: center;
   }
-  img {
-    height: 15rem;
-    width: auto;
-  }
 
-  @media screen and (max-width: 425px) {
-    width: 80%;
-    height: 25vh;
+  ${mediaQueries.sm} {
+    width: 85%;
+    height: 35vh;
+    background-color: ${themeColors.primary.elementaryBlack};
+    color: ${themeColors.primary.elementaryWhite};
 
     img {
       height: 8rem;
@@ -58,29 +70,22 @@ const StyledNewsArticle = styled.li`
     }
 
     h2 {
-      font-size: 1.2rem;
-      margin-top: 1rem;
+      margin-top: ${spacings.margins.sm};
       font-weight: bold;
-      font-family: ${appFonts.secondary.secondaryFont};
-      text-align: center;
+      ${typography.headings.md}
     }
   }
-
-  @media screen and (max-width: 1024px) {
-    width: 80%;
-    height: 25vh;
-
-    img {
-      height: 8rem;
-      width: auto;
-    }
+  ${mediaQueries.lg} {
+    width: 90%;
+    height: 50vh;
 
     h2 {
-      font-size: 1.2rem;
-      margin-top: 1rem;
-      font-weight: bold;
-      font-family: ${appFonts.secondary.secondaryFont};
-      text-align: center;
+      ${typography.headings.md}
+    }
+
+    img {
+      height: 12rem;
+      width: auto;
     }
   }
 `;
@@ -95,10 +100,6 @@ export default function NewsArticle({ article }: NewsArticleProps) {
     createdBy,
     createdAt,
   } = article;
-
-  const date = new Date(createdAt);
-
-  const formattedDate = date.toLocaleDateString();
 
   if (headline === "[Removed]") return;
 
@@ -119,7 +120,7 @@ export default function NewsArticle({ article }: NewsArticleProps) {
           <p>{shortDescription}</p>
           <p>
             <span>
-              {createdBy} {formattedDate}
+              {createdBy} {formatDate(createdAt)}
             </span>
           </p>
         </div>

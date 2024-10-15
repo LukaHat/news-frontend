@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { flexContainerColumn } from "../../../styles/utils/mixins";
+import { spacings } from "../../../theme/spacings";
 
 const StyledForm = styled.form`
   ${flexContainerColumn};
-  gap: 0.4rem;
+  gap: ${spacings.gaps.sm};
 `;
 
 export default function Form({

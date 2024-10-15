@@ -1,20 +1,23 @@
 import styled from "styled-components";
 import { themeColors } from "../../../theme/colors";
 import { Button } from "../../atoms/Button";
-import { appFonts } from "../../../theme/fonts";
 import { Form } from "../../molecules/Form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createPost, updateArticle } from "../../../api/news";
-import { useModal } from "../../hooks/useModal";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../../lib/hooks/useAuth";
 import { FormField } from "../../molecules/FormField";
+import { EditDataInterface } from "../../../types/NewsTypes";
 import {
   flexContainer,
   flexContainerColumn,
 } from "../../../styles/utils/mixins";
+import ReactDOM from "react-dom";
+import { typography } from "../../../theme/typography";
+import { mediaQueries } from "../../../theme/mediaQueries";
+import { spacings } from "../../../theme/spacings";
 
 const StyledEditModalBackground = styled.div`
   position: fixed;
@@ -27,19 +30,19 @@ const StyledEditModalBackground = styled.div`
 `;
 
 const StyledEditModal = styled.div`
-  width: clamp(80%, 80vw, 30%);
-  height: 50vh;
+  width: 90vw;
+  height: 70vh;
   background-color: ${themeColors.primary.elementaryBlue};
   color: ${themeColors.primary.elementaryWhite};
   ${flexContainerColumn}
-  gap: 2rem;
-  padding-top: 4vh;
-  h3 {
-    font-family: ${appFonts.primary.mainFont};
-    font-size: ${appFonts.fontSizes.headings.h3};
+  gap: ${spacings.gaps.lg};
+  padding-top: ${spacings.paddings.sm};
+  h2 {
+    font-family: ${typography.primary.mainFont};
+    ${typography.headings.md};
   }
   button {
-    font-size: 1.4rem;
+    ${typography.text.md}
     color: ${themeColors.primary.elementaryWhite};
     background-color: ${themeColors.secondary.expandedGreen};
   }
@@ -50,7 +53,7 @@ const StyledEditModal = styled.div`
   }
   form {
     color: ${themeColors.primary.elementaryWhite};
-    width: clamp(90%, 70%, 60%);
+    width: 90%;
     ${flexContainer};
     justify-content: space-evenly;
     div {
@@ -59,22 +62,22 @@ const StyledEditModal = styled.div`
         color: ${themeColors.primary.elementaryWhite};
       }
     }
+  }
+
+  ${mediaQueries.xs} {
+    width: 70vw;
+    height: 60vh;
+
     button {
       align-self: flex-end;
     }
   }
-  @media (min-width: 768px) and (max-width: 1100px) {
-    width: clamp(70vw, 50vw, 40vw);
-    form {
-      width: clamp(85%, 70%, 60%);
-    }
-  }
-  @media (min-width: 1101px) {
-    width: clamp(50vw, 40vw, 35%);
 
-    form {
-      width: clamp(80%, 60%, 40%);
-    }
+  ${mediaQueries.md} {
+    width: 50vw;
+    height: 40vh;
+
+    ${typography.text.lg}
   }
 `;
 
@@ -96,8 +99,17 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function EditModal() {
-  const { closeModal, editData } = useModal();
+interface ModalProps {
+  editData?: EditDataInterface | null;
+  closeModal: () => void;
+  setEditData: (data: EditDataInterface | null) => void;
+}
+
+export default function EditModal({
+  editData,
+  closeModal,
+  setEditData,
+}: ModalProps) {
   const { token } = useAuth();
   const queryClient = useQueryClient();
 
@@ -139,6 +151,7 @@ export default function EditModal() {
         queryClient.invalidateQueries({ queryKey: ["frontPageNews"] });
       }
       closeModal();
+      setEditData(null);
     },
   });
 
@@ -146,11 +159,14 @@ export default function EditModal() {
     mutation.mutate({ token, data });
   };
 
-  return (
+  const modalPortal = document.getElementById("edit-modal");
+  if (!modalPortal) return null;
+
+  return ReactDOM.createPortal(
     <StyledEditModalBackground>
       <StyledEditModal>
         <div>
-          <h3>{editData ? "Edit post" : "Add new post"}</h3>
+          <h2>{editData ? "Edit post" : "Add new post"}</h2>
           <Button onClick={closeModal}>&times;</Button>
         </div>
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -188,6 +204,7 @@ export default function EditModal() {
           <Button>{editData ? "Edit Post" : "Add post"}</Button>
         </Form>
       </StyledEditModal>
-    </StyledEditModalBackground>
+    </StyledEditModalBackground>,
+    modalPortal
   );
 }

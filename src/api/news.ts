@@ -1,6 +1,6 @@
 import placeholder from "../assets/images/placeholder.jpg";
-import { NewsDetail } from "../components/pages/NewsDetail";
-import { patch, post, get, getById, remove } from "./base";
+import { NewsDetail } from "../pages/NewsDetail";
+import { request } from "./base";
 import {
   NewsPostFrontPage,
   NewsPostDetail,
@@ -14,7 +14,10 @@ export const getFrontPageNews = async (
     if (!token) {
       throw new Error("Token must be passed and valid");
     }
-    const response = await get<NewsPostFrontPage[]>("news/front-page", token);
+    const response = await request<NewsPostFrontPage[]>({
+      token,
+      url: "news/front-page",
+    });
     const newsData = response.data;
     return newsData;
   } catch (error) {
@@ -31,7 +34,11 @@ export const getNewsArticleById = async (
     if (!token) {
       throw new Error("Token must be passed and valid");
     }
-    const response = await getById<NewsPostDetail>("news/", token, id);
+    const response = await request<NewsPostDetail | undefined>({
+      token,
+      url: "news",
+      id,
+    });
     const articleData = response.data;
     return articleData;
   } catch (error) {
@@ -63,7 +70,12 @@ export const createPost = async (
       formData.append("image", placeholder);
     }
 
-    const response = await post("news", formData, token);
+    const response = await request<NewsPostDetail | undefined>({
+      method: "post",
+      url: "news",
+      data: formData,
+      token,
+    });
 
     return response.data;
   } catch (error) {
@@ -74,17 +86,23 @@ export const createPost = async (
 
 export const updateArticle = async (
   token: string | undefined,
-  articleId: string | undefined,
-  articleData: Partial<typeof NewsDetail>
+  id: string | undefined,
+  data: Partial<typeof NewsDetail>
 ): Promise<NewsPostDetail | undefined> => {
   try {
     if (!token) {
       throw new Error("Token must be passed and valid");
     }
-    if (!articleId) {
+    if (!id) {
       throw new Error("Article ID must be passed and valid");
     }
-    const response = await patch("news/", token, articleId, articleData);
+    const response = await request<NewsPostDetail | undefined>({
+      method: "patch",
+      url: "news",
+      token,
+      id,
+      data,
+    });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -94,16 +112,21 @@ export const updateArticle = async (
 
 export const deleteArticle = async (
   token: string | undefined,
-  articleId: string | undefined
+  id: string | undefined
 ): Promise<string | undefined> => {
   try {
     if (!token) {
       throw new Error("Token must be passed and valid");
     }
-    if (!articleId) {
+    if (!id) {
       throw new Error("Article ID must be passed and valid");
     }
-    const response = await remove("news/", token, articleId);
+    const response = await request<string | undefined>({
+      method: "delete",
+      url: "news/",
+      token,
+      id,
+    });
     return response.data;
   } catch (error) {
     console.error(error);

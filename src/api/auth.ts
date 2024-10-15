@@ -1,11 +1,15 @@
-import { post } from "./base";
+import { request } from "./base";
 import { LoginData, RegisterData, AuthUser } from "../types/AuthTypes";
 
 export const login = async (
   data: LoginData
 ): Promise<{ user: AuthUser; token: string } | undefined> => {
   try {
-    const res = await post("auth/login", data);
+    const res = await request<{ user: AuthUser; token: string } | undefined>({
+      method: "post",
+      url: "auth/login",
+      data,
+    });
     return res.data;
   } catch (error) {
     console.error(error);
@@ -15,9 +19,13 @@ export const login = async (
 
 export const registerUser = async (
   data: RegisterData
-): Promise<{ token: string } | undefined> => {
+): Promise<{ user: AuthUser; token: string } | undefined> => {
   try {
-    const res = await post("auth/register", data);
+    const res = await request<{ user: AuthUser; token: string } | undefined>({
+      method: "post",
+      url: "auth/register",
+      data,
+    });
     return res.data;
   } catch (error) {
     console.error(error);

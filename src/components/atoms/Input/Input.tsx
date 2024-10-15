@@ -8,4 +8,6 @@ const Input = React.forwardRef<
   return <StyledInput {...props} ref={ref} />;
 });
 
+Input.displayName = "Input";
+
 export default Input;

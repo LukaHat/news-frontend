@@ -1,8 +1,10 @@
 import styled from "styled-components";
-import { themeColors } from "../../../theme/colors";
-import { appFonts } from "../../../theme/fonts";
-import { ArticleComment } from "../../../types/CommentTypes";
+import { formatDate } from "../../../lib/helper/helper";
 import { flexContainerColumn } from "../../../styles/utils/mixins";
+import { themeColors } from "../../../theme/colors";
+import { typography } from "../../../theme/typography";
+import { ArticleComment } from "../../../types/CommentTypes";
+import { spacings } from "../../../theme/spacings";
 
 const StyledComment = styled.p`
   ${flexContainerColumn};
@@ -10,19 +12,19 @@ const StyledComment = styled.p`
   width: 100%;
   height: auto;
   color: ${themeColors.primary.elementaryWhite};
-  margin: 0.3rem 0;
+  margin: ${spacings.margins.xs} 0;
   padding: 0;
-  font-size: ${appFonts.fontSizes.comment.commentText};
+  ${typography.text.md}
 
   span:first-child {
-    font-size: ${appFonts.fontSizes.comment.commentAuthor};
+    ${typography.text.md}
     font-weight: bold;
-    font-family: ${appFonts.secondary.secondaryFont};
+    font-family: ${typography.secondary.secondaryFont};
   }
 
   span:nth-child(2) {
-    font-size: ${appFonts.fontSizes.comment.commentDate};
-    margin-bottom: 0.4rem;
+    ${typography.text.sm}
+    margin-bottom: ${spacings.margins.xs};
     color: ${themeColors.secondary.expandedWhite};
   }
 `;
@@ -32,12 +34,10 @@ export default function Comment({
   commenter,
   createdAt,
 }: ArticleComment) {
-  const formattedDate = new Date(createdAt).toLocaleString().slice(0, -3);
-
   return (
     <StyledComment>
       <span>{commenter}</span>
-      <span>{formattedDate}</span>
+      <span>{formatDate(createdAt)}</span>
       {comment}
     </StyledComment>
   );

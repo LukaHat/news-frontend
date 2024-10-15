@@ -1,19 +1,30 @@
-import { useEffect, useState } from "react";
-import { Button } from "../../atoms/Button";
+import React from "react";
 import { Input } from "../../atoms/Input";
 import { addComment, getComments } from "../../../api/comment";
 import { Comment } from "../../molecules/Comment";
 import styled from "styled-components";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../../lib/hooks/useAuth";
 import { ArticleComment } from "../../../types/CommentTypes";
 import { flexContainerColumn } from "../../../styles/utils/mixins";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form } from "../../molecules/Form";
+import { Button } from "../../atoms/Button";
+import { ErrorText } from "../../atoms/ErrorText";
+import { mediaQueries } from "../../../theme/mediaQueries";
+import { spacings } from "../../../theme/spacings";
 
 const StyledCommentSection = styled.section`
-  width: 70%;
+  width: 80%;
   ${flexContainerColumn}
   align-items: flex-start;
   justify-content: flex-start;
-  padding-bottom: 1rem;
+  padding-bottom: ${spacings.paddings.sm};
+
+  ${mediaQueries.xs} {
+    width: 70%;
+  }
 `;
 
 const StyledCommentList = styled.div`
@@ -22,44 +33,67 @@ const StyledCommentList = styled.div`
   width: 100%;
   height: 20vh;
   overflow-y: scroll;
-  margin-bottom: 1rem;
+  margin-bottom: ${spacings.margins.sm};
   align-items: flex-start;
 `;
 const StyledInputContainer = styled.div`
   align-self: center;
   width: auto;
+
+  form {
+    ${flexContainerColumn}
+  }
 `;
 
+const commentSchema = z.object({
+  comment: z.string().min(1, {
+    message: "Comment cannot be empty",
+  }),
+});
+
+type CommentData = z.infer<typeof commentSchema>;
+
 export default function CommentSection({ id }: { id: string | undefined }) {
-  const [comments, setComments] = useState<ArticleComment[]>([]);
-  const [comment, setComment] = useState("");
+  const [comments, setComments] = React.useState<ArticleComment[]>([]);
 
   const { user } = useAuth();
 
-  useEffect(() => {
-    const fetchComments = (id: string | undefined) => {
-      const response = getComments(id);
-      if (response) {
-        setComments(response);
-      }
-    };
-    fetchComments(id);
-  }, [setComments, id]);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CommentData>({ resolver: zodResolver(commentSchema) });
 
-  const handleAddComment = () => {
-    if (user?.fullName && id && comment.trim()) {
+  const onSubmit = (data: CommentData) => {
+    if (user?.fullName && id) {
+      const newComment: ArticleComment = {
+        comment: data.comment,
+        commenter: user.fullName,
+        createdAt: new Date().toISOString(),
+      };
+
       try {
-        addComment(user.fullName, comment.trim(), id);
-        setComment("");
-        const updatedComments = getComments(id);
-        if (updatedComments) {
-          setComments(updatedComments);
-        }
+        addComment(user.fullName, newComment.comment, id);
+        setComments((prevComments) => [...prevComments, newComment]);
+        reset();
       } catch (error) {
-        console.error("Error adding comment:", error);
+        console.error(error);
+        throw error;
       }
     }
   };
+
+  React.useEffect(() => {
+    const fetchComments = () => {
+      if (id) {
+        const fetchedComments = getComments(id);
+        if (fetchedComments) setComments(fetchedComments);
+      }
+    };
+
+    fetchComments();
+  }, [id]);
 
   return (
     <StyledCommentSection>
@@ -77,12 +111,11 @@ export default function CommentSection({ id }: { id: string | undefined }) {
       )}
 
       <StyledInputContainer>
-        <Input
-          type="textarea"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        />
-        <Button onClick={handleAddComment}>Comment</Button>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Input {...register("comment")} />
+          <Button type="submit">Add comment</Button>
+        </Form>
+        {errors.comment && <ErrorText>{errors.comment.message}</ErrorText>}
       </StyledInputContainer>
     </StyledCommentSection>
   );

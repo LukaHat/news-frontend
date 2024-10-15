@@ -1,12 +1,13 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Homepage from "./components/pages/Homepage/Homepage";
-import Auth from "./components/pages/Auth/Auth";
+import Homepage from "./pages/Homepage/Homepage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthContext";
-import { ProtectedRoute } from "./components/templates/ProtectedRoute";
-import { NewsDetail } from "./components/pages/NewsDetail";
-import { MainLayout } from "./components/templates/MainLayout";
-import { ModalProvider } from "./context/ModalContext";
+import { ProtectedRoute } from "./templates/ProtectedRoute";
+import { NewsDetail } from "./pages/NewsDetail";
+import { MainLayout } from "./templates/MainLayout";
+import { SignIn } from "./pages/Sign-in";
+import { SignUp } from "./pages/Sign-up";
+import { Auth } from "./templates/Auth";
 
 const queryClient = new QueryClient();
 
@@ -16,15 +17,16 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/auth" element={<Auth />}>
+              <Route path="sign-in" element={<SignIn />} />
+              <Route path="sign-up" element={<SignUp />} />
+            </Route>
             <Route
               path="/"
               element={
-                <ModalProvider>
-                  <ProtectedRoute>
-                    <MainLayout />
-                  </ProtectedRoute>
-                </ModalProvider>
+                <ProtectedRoute>
+                  <MainLayout />
+                </ProtectedRoute>
               }
             >
               <Route path="/" element={<Homepage />} />

@@ -143,6 +143,16 @@ button {
   cursor: pointer;
 }
 
+input[type="checkbox"] {
+  width: 4vw;
+  height: 3vh;
+}
+
+input[type="file"]::file-selector-button {
+  border: none;
+  background: none;
+}
+
 @font-face {
   font-family: "Taz-Black";
   src: url("../assets/fonts/Taz-Black.otf") format("opentype");

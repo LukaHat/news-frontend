@@ -4,6 +4,6 @@ import { Button as StyledButton } from "./Button.style";
 export default function Button({
   children,
   ...props
-}: React.PropsWithChildren<React.HtmlHTMLAttributes<HTMLButtonElement>>) {
+}: React.PropsWithChildren<React.ButtonHTMLAttributes<HTMLButtonElement>>) {
   return <StyledButton {...props}>{children}</StyledButton>;
 }

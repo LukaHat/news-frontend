@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 import { themeColors } from "../../../theme/colors";
-import { appFonts } from "../../../theme/fonts";
+import { typographyEmotion } from "../../../theme/typography/typography";
 
 export const ErrorText = styled.p`
   color: ${themeColors.applicationStates.error};
-  font-size: ${appFonts.fontSizes.errorText};
+  ${typographyEmotion.text.sm};
 `;

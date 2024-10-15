@@ -18,7 +18,7 @@ export const Loader = styled.div`
   justify-content: center;
 
   img {
-    width: 5%;
+    width: 10%;
     height: auto;
     animation: ${Spin} 0.5s ease-in-out reverse infinite;
   }

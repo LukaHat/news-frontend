@@ -24,3 +24,7 @@ export interface CreateArticle {
   fullDescription: string;
   category: string;
 }
+
+export interface EditDataInterface extends CreateArticle {
+  id: string | undefined;
+}
