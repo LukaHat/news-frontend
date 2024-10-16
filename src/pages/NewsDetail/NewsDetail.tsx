@@ -16,6 +16,7 @@ import { EditDataInterface } from "../../types/NewsTypes";
 import { typography } from "../../theme/typography";
 import { mediaQueries } from "../../theme/mediaQueries";
 import { spacings } from "../../theme/spacings";
+import toast from "react-hot-toast";
 
 const StyledNewsDetail = styled.div`
   ${flexContainerColumn}
@@ -163,6 +164,7 @@ export default function NewsDetail() {
           <Button
             onClick={() => {
               deleteArticle(token, id);
+              toast.success("Article deleted");
               navigate(-1);
             }}
           >

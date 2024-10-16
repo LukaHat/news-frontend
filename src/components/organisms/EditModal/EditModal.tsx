@@ -18,6 +18,7 @@ import ReactDOM from "react-dom";
 import { typography } from "../../../theme/typography";
 import { mediaQueries } from "../../../theme/mediaQueries";
 import { spacings } from "../../../theme/spacings";
+import toast from "react-hot-toast";
 
 const StyledEditModalBackground = styled.div`
   position: fixed;
@@ -150,8 +151,17 @@ export default function EditModal({
       } else {
         queryClient.invalidateQueries({ queryKey: ["frontPageNews"] });
       }
+      if (editData) {
+        toast.success("Article updated");
+      }
+      if (!editData) {
+        toast.success("Article created");
+      }
       closeModal();
       setEditData(null);
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 

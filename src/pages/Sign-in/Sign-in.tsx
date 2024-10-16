@@ -10,6 +10,7 @@ import { Input } from "../../components/atoms/Input";
 import { Label } from "../../components/atoms/Label";
 import { Form } from "../../components/molecules/Form";
 import { useAuth } from "../../lib/hooks/useAuth";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email adress" }),
@@ -47,6 +48,9 @@ export default function SignIn() {
         addUser(data.user);
       }
       navigate("/");
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 

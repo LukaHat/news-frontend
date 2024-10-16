@@ -8,6 +8,7 @@ import { MainLayout } from "./templates/MainLayout";
 import { SignIn } from "./pages/Sign-in";
 import { SignUp } from "./pages/Sign-up";
 import { Auth } from "./templates/Auth";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 
@@ -15,6 +16,7 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
+        <Toaster />
         <BrowserRouter>
           <Routes>
             <Route path="/auth" element={<Auth />}>

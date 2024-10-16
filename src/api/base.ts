@@ -31,7 +31,9 @@ export const request = async <T>(
     return res;
   } catch (error) {
     console.error(error);
-
+    if (axios.isAxiosError(error)) {
+      throw error.response?.data;
+    }
     throw error;
   }
 };

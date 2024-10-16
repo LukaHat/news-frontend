@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { ErrorText } from "../../components/atoms/ErrorText";
 import { registerUser } from "../../api/auth";
 import { useAuth } from "../../lib/hooks/useAuth";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   firstName: z.string().min(1, { message: "First name is required" }),
@@ -47,6 +48,7 @@ export default function SignUp() {
         alias: data.nickname,
         role: "admin",
       });
+      console.log(res);
       return res;
     },
     onSuccess: (data) => {
@@ -55,6 +57,9 @@ export default function SignUp() {
         addUser(data.user);
       }
       navigate("/");
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
