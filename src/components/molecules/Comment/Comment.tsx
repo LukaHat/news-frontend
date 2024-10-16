@@ -19,7 +19,7 @@ const StyledComment = styled.p`
   span:first-child {
     ${typography.text.md}
     font-weight: bold;
-    font-family: ${typography.secondary.secondaryFont};
+    font-family: ${typography.baseFonts.secondary.secondaryFont};
   }
 
   span:nth-child(2) {

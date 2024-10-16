@@ -20,7 +20,7 @@ const StyledNavbar = styled.nav`
   background-color: ${themeColors.primary.elementaryBlue};
   ${flexContainer}
   justify-content: space-between;
-  font-family: ${typography.primary.mainFont};
+  font-family: ${typography.baseFonts.primary.mainFont};
   color: ${themeColors.primary.elementaryWhite};
   .mobile-menu {
     display: flex;

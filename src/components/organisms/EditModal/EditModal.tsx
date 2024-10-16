@@ -38,7 +38,7 @@ const StyledEditModal = styled.div`
   gap: ${spacings.gaps.lg};
   padding-top: ${spacings.paddings.sm};
   h2 {
-    font-family: ${typography.primary.mainFont};
+    font-family: ${typography.baseFonts.primary.mainFont};
     ${typography.headings.md};
   }
   button {
@@ -75,7 +75,7 @@ const StyledEditModal = styled.div`
 
   ${mediaQueries.md} {
     width: 50vw;
-    height: 40vh;
+    height: 50vh;
 
     ${typography.text.lg}
   }

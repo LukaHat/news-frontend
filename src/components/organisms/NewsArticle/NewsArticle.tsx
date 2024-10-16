@@ -50,7 +50,7 @@ const StyledNewsArticle = styled.li`
 
   h2 {
     ${typography.headings.sm}
-    font-family: ${typography.secondary.secondaryFont};
+    font-family: ${typography.baseFonts.secondary.secondaryFont};
     font-weight: bold;
     text-align: center;
     margin-top: ${spacings.margins.sm};

@@ -47,7 +47,7 @@ const StyledNewsDetail = styled.div`
     h2 {
       ${typography.headings.md};
       font-weight: bold;
-      font-family: ${typography.secondary.secondaryFont};
+      font-family: ${typography.baseFonts.secondary.secondaryFont};
     }
 
     h3 {
@@ -56,7 +56,7 @@ const StyledNewsDetail = styled.div`
       margin: ${spacings.margins.xs} 0;
       background-color: ${themeColors.secondary.expandedGreen};
       color: ${themeColors.primary.elementaryWhite};
-      font-family: ${typography.secondary.secondaryFont};
+      font-family: ${typography.baseFonts.secondary.secondaryFont};
     }
   }
 

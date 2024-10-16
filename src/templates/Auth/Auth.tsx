@@ -6,7 +6,7 @@ const StyledWrapper = styled.div`
   height: 100vh;
   width: 100%;
   ${flexContainerColumn}
-  font-family: ${typography.primary.mainFont};
+  font-family: ${typography.baseFonts.primary.mainFont};
 `;
 
 export default function Auth() {
