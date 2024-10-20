@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { flexContainerColumn } from "../../styles/utils/mixins";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { typography } from "../../theme/typography";
+import { useAuth } from "../../lib/hooks/useAuth";
 const StyledWrapper = styled.div`
   height: 100vh;
   width: 100%;
@@ -10,6 +11,12 @@ const StyledWrapper = styled.div`
 `;
 
 export default function Auth() {
+  const { isAuthenticated } = useAuth();
+
+  if (isAuthenticated) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <StyledWrapper>
       <Outlet />

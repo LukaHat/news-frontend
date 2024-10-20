@@ -1,3 +1,7 @@
+import { toRem } from "../../lib/helper/helper";
+
 export const shadows = {
-  baseHoverShadow: "10px 10px 33px 10px rgba(0,0,0,0.75);",
+  baseHoverShadow: `${toRem(10)} ${toRem(10)} ${toRem(33)} ${toRem(
+    10
+  )} rgba(0,0,0,0.75)`,
 };

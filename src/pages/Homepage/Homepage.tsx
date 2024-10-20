@@ -10,16 +10,16 @@ import { spacings } from "../../theme/spacings";
 
 const StyledNewsList = styled.ul`
   display: grid;
-  padding: ${spacings.paddings.sm} 0;
+  padding: ${spacings.sm} 0;
   justify-items: center;
   align-items: center;
   grid-template-columns: repeat(1, 1fr);
-  gap: ${spacings.gaps.md};
+  gap: ${spacings.md};
 
   ${mediaQueries.sm} {
     grid-template-columns: repeat(2, 1fr);
-    gap: ${spacings.gaps.lg};
-    padding: ${spacings.paddings.sm} 0;
+    gap: ${spacings.lg};
+    padding: ${spacings.sm} 0;
   }
   ${mediaQueries.lg} {
     grid-template-columns: repeat(3, 1fr);
@@ -35,10 +35,7 @@ export default function Homepage() {
     error,
   } = useQuery({
     queryKey: ["frontPageNews"],
-    queryFn: async () => {
-      const res = await getFrontPageNews(token);
-      return res;
-    },
+    queryFn: async () => await getFrontPageNews(token),
   });
 
   if (isLoading) return <Loader />;

@@ -1,8 +1,21 @@
-import styled from "@emotion/styled";
+import styled, { CSSObject } from "@emotion/styled";
 import { themeColors } from "../../../theme/colors";
-import { typographyEmotion } from "../../../theme/typography/typography";
+import { typography } from "../../../theme/typography";
 
-export const Label = styled.label`
-  color: ${themeColors.primary.elementaryBlack};
-  ${typographyEmotion.text.lg};
-`;
+// export const Label = styled.label`
+//   color: ${themeColors.primary.elementaryBlack};
+//   ${typography.text.lg};
+// `;
+
+const baseLabelStyles: CSSObject = {
+  color: themeColors.primary.elementaryBlack,
+};
+
+const labelTypography: CSSObject = {
+  ...typography.text.lg,
+};
+
+export const StyledLabel = styled.label({
+  ...baseLabelStyles,
+  ...labelTypography,
+});

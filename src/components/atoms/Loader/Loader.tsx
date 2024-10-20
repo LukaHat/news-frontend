@@ -1,4 +1,4 @@
-import { Loader as StyledLoader } from "./Loader.style";
+import { StyledLoader } from "./Loader.style";
 import loaderIcon from "../../../assets/images/iconmonstr-loading-5.svg";
 
 export default function Loader() {

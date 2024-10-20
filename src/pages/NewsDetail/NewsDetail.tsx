@@ -1,22 +1,31 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import { deleteArticle, getNewsArticleById } from "../../api/news";
-import { ErrorText } from "../../components/atoms/ErrorText";
 import styled from "styled-components";
+import {
+  deleteArticle,
+  getNewsArticleById,
+  updateArticle,
+} from "../../api/news";
 import placeholder from "../../assets/images/placeholder.jpg";
-import { themeColors } from "../../theme/colors";
 import { Button } from "../../components/atoms/Button";
+import { ErrorText } from "../../components/atoms/ErrorText";
+import { Loader } from "../../components/atoms/Loader";
 import { CommentSection } from "../../components/organisms/CommentSection";
+import { formatDate } from "../../lib/helper/helper";
 import { useAuth } from "../../lib/hooks/useAuth";
 import { flexContainer, flexContainerColumn } from "../../styles/utils/mixins";
-import { Loader } from "../../components/atoms/Loader";
-import { formatDate } from "../../lib/helper/helper";
-import { useOutletContext } from "react-router-dom";
-import { EditDataInterface } from "../../types/NewsTypes";
-import { typography } from "../../theme/typography";
+import { themeColors } from "../../theme/colors";
 import { mediaQueries } from "../../theme/mediaQueries";
 import { spacings } from "../../theme/spacings";
-import toast from "react-hot-toast";
+import { typography } from "../../theme/typography";
+import React from "react";
+import { Modal } from "../../components/atoms/Modal";
+import { Form } from "../../components/molecules/Form";
+import { FormField } from "../../components/molecules/FormField";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 const StyledNewsDetail = styled.div`
   ${flexContainerColumn}
@@ -53,8 +62,8 @@ const StyledNewsDetail = styled.div`
 
     h3 {
       ${typography.headings.sm};
-      padding: ${spacings.paddings.sm};
-      margin: ${spacings.margins.xs} 0;
+      padding: ${spacings.sm};
+      margin: ${spacings.xs} 0;
       background-color: ${themeColors.secondary.expandedGreen};
       color: ${themeColors.primary.elementaryWhite};
       font-family: ${typography.baseFonts.secondary.secondaryFont};
@@ -63,11 +72,11 @@ const StyledNewsDetail = styled.div`
 
   .buttons {
     ${flexContainer}
-    gap: ${spacings.gaps.sm};
+    gap: ${spacings.sm};
   }
 
   ${mediaQueries.xs} {
-    padding: ${spacings.paddings.xs} 0;
+    padding: ${spacings.xs} 0;
     .text-content {
       width: 70%;
     }
@@ -92,16 +101,38 @@ const StyledNewsDetail = styled.div`
   }
 `;
 
-interface OutletContextType {
-  setEditData: (data: EditDataInterface | null) => void;
-  openModal: () => void;
-}
+const formSchema = z.object({
+  headline: z.string().min(1, { message: "Post has to have a headline" }),
+  shortDescription: z
+    .string()
+    .min(1, { message: "Post has to have a short description" }),
+  fullDescription: z
+    .string()
+    .min(1, { message: "Post has to have a description" }),
+  category: z
+    .string()
+    .min(1, { message: "Post has to have a category" })
+    .max(10, { message: "Post category can have at most 10 characters" }),
+  isBreakingNews: z.boolean(),
+  imageUrl: z.any().optional(),
+});
+
+type FormData = z.infer<typeof formSchema>;
 
 export default function NewsDetail() {
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [editData, setEditData] = React.useState({
+    headline: "",
+    shortDescription: "",
+    fullDescription: "",
+    category: "",
+    isBreakingNews: false,
+    imageUrl: "",
+  });
   const { token, user } = useAuth();
-  const { id } = useParams();
+  const { id } = useParams() as { id: string };
   const navigate = useNavigate();
-  const { setEditData, openModal } = useOutletContext<OutletContextType>();
+  const queryClient = useQueryClient();
 
   const {
     data: article,
@@ -109,13 +140,46 @@ export default function NewsDetail() {
     error,
   } = useQuery({
     queryKey: ["newsDetails", id],
-    queryFn: async () => {
-      if (id && token) {
-        const res = await getNewsArticleById(token, id);
-        return res;
-      }
+    queryFn: async () => await getNewsArticleById(token, id),
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      headline: article?.headline || editData.headline,
+      shortDescription: article?.shortDescription || editData.shortDescription,
+      fullDescription: article?.fullDescription || editData.fullDescription,
+      category: article?.category || editData.category,
+      isBreakingNews: article?.isBreakingNews || editData.isBreakingNews,
+      imageUrl: article?.imageUrl || editData.imageUrl,
     },
   });
+
+  const mutation = useMutation({
+    mutationFn: async ({ token, data }: { token: string; data: FormData }) => {
+      if (article) {
+        return await updateArticle(token, id, data);
+      }
+    },
+    onSuccess: () => {
+      toast.success("Article updated");
+      queryClient.invalidateQueries({
+        queryKey: ["newsDetails", id],
+      });
+
+      setIsModalOpen(false);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const onSubmit = (data: FormData) => {
+    mutation.mutate({ token, data });
+  };
 
   if (isLoading) return <Loader />;
   if (error) return <ErrorText>{error.message}</ErrorText>;
@@ -147,9 +211,8 @@ export default function NewsDetail() {
         <div className="buttons">
           <Button
             onClick={() => {
-              openModal();
+              setIsModalOpen(true);
               setEditData({
-                id: article?._id,
                 headline: article?.headline || "",
                 shortDescription: article?.shortDescription || "",
                 fullDescription: article?.fullDescription || "",
@@ -162,8 +225,8 @@ export default function NewsDetail() {
             Edit
           </Button>
           <Button
-            onClick={() => {
-              deleteArticle(token, id);
+            onClick={async () => {
+              await deleteArticle(token, id);
               toast.success("Article deleted");
               navigate(-1);
             }}
@@ -178,6 +241,49 @@ export default function NewsDetail() {
         <p>{article?.fullDescription}</p>
       </div>
       <CommentSection id={id} />
+
+      {isModalOpen && (
+        <Modal>
+          <div>
+            <h2>Edit post</h2>
+            <Button onClick={() => setIsModalOpen(false)}>&times;</Button>
+          </div>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <FormField
+              label="Headline"
+              error={errors.headline && errors.headline.message}
+              register={register("headline")}
+            />
+            <FormField
+              label="Short description"
+              error={errors.shortDescription && errors.shortDescription.message}
+              register={register("shortDescription")}
+            />
+            <FormField
+              label="Full description"
+              error={errors.fullDescription && errors.fullDescription.message}
+              register={register("fullDescription")}
+            />
+            <FormField
+              label="Category"
+              error={errors.category && errors.category.message}
+              register={register("category")}
+            />
+            <FormField
+              label="Breaking news?"
+              error={errors.isBreakingNews && errors.isBreakingNews.message}
+              type="checkbox"
+              register={register("isBreakingNews")}
+            />
+            <FormField
+              label="Image"
+              register={register("imageUrl")}
+              type="file"
+            />
+            <Button>Edit post</Button>
+          </Form>
+        </Modal>
+      )}
     </StyledNewsDetail>
   );
 }

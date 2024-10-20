@@ -1,8 +1,16 @@
 import styled from "@emotion/styled";
 import { themeColors } from "../../../theme/colors";
-import { typographyEmotion } from "../../../theme/typography/typography";
+import { typography } from "../../../theme/typography";
+import { CSSObject } from "@emotion/react";
 
-export const ErrorText = styled.p`
-  color: ${themeColors.applicationStates.error};
-  ${typographyEmotion.text.sm};
-`;
+const baseErrorTextStyles: CSSObject = {
+  color: themeColors.applicationStates.error,
+};
+
+const errorTextTypography: CSSObject = {
+  ...typography.text.sm,
+};
+export const StyledErrorText = styled.p({
+  ...baseErrorTextStyles,
+  ...errorTextTypography,
+});

@@ -1,5 +1,6 @@
-import { keyframes } from "@emotion/react";
+import { CSSObject, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
+import { flexContainerEmotion } from "../../../styles/utils/mixins";
 
 const Spin = keyframes`
   0% {
@@ -10,16 +11,19 @@ const Spin = keyframes`
   }
 `;
 
-export const Loader = styled.div`
-  width: 100%;
-  min-height: 92vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const baseLoaderStyles: CSSObject = {
+  width: "100%",
+  minHeight: "92vh",
+  ...flexContainerEmotion,
+};
 
-  img {
-    width: 10%;
-    height: auto;
-    animation: ${Spin} 0.5s ease-in-out reverse infinite;
-  }
-`;
+const loaderImageStyles: CSSObject = {
+  width: "10%",
+  height: "auto",
+  animation: `${Spin} 0.5s ease-in-out reverse infinite`,
+};
+
+export const StyledLoader = styled.div({
+  ...baseLoaderStyles,
+  img: loaderImageStyles,
+});

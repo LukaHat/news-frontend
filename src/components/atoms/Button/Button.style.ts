@@ -1,14 +1,23 @@
 import styled from "@emotion/styled";
 import { themeColors } from "../../../theme/colors";
-import { typographyEmotion } from "../../../theme/typography/typography";
 import { spacings } from "../../../theme/spacings";
 import { radius } from "../../../theme/radius";
+import { typography } from "../../../theme/typography";
+import { CSSObject } from "@emotion/styled";
 
-export const Button = styled.button`
-  background-color: ${themeColors.primary.elementaryBlue};
-  color: ${themeColors.primary.elementaryWhite};
-  padding: ${spacings.paddings.xs};
-  border-radius: ${radius.xs};
-  ${typographyEmotion.text.lg};
-  cursor: pointer;
-`;
+const buttonBaseStyles: CSSObject = {
+  backgroundColor: themeColors.primary.elementaryBlue,
+  color: themeColors.primary.elementaryWhite,
+  padding: spacings.xs,
+  borderRadius: radius.xs,
+  cursor: "pointer",
+};
+
+const buttonTypography: CSSObject = {
+  ...typography.text.lg,
+};
+
+export const StyledButton = styled.button({
+  ...buttonBaseStyles,
+  ...buttonTypography,
+});

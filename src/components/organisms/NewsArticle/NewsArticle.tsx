@@ -53,7 +53,7 @@ const StyledNewsArticle = styled.li`
     font-family: ${typography.baseFonts.secondary.secondaryFont};
     font-weight: bold;
     text-align: center;
-    margin-top: ${spacings.margins.sm};
+    margin-top: ${spacings.sm};
     font-weight: bold;
     text-align: center;
   }
@@ -70,7 +70,7 @@ const StyledNewsArticle = styled.li`
     }
 
     h2 {
-      margin-top: ${spacings.margins.sm};
+      margin-top: ${spacings.sm};
       font-weight: bold;
       ${typography.headings.md}
     }

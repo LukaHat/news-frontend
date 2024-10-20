@@ -20,7 +20,7 @@ const StyledCommentSection = styled.section`
   ${flexContainerColumn}
   align-items: flex-start;
   justify-content: flex-start;
-  padding-bottom: ${spacings.paddings.sm};
+  padding-bottom: ${spacings.sm};
 
   ${mediaQueries.xs} {
     width: 70%;
@@ -33,7 +33,7 @@ const StyledCommentList = styled.div`
   width: 100%;
   height: 20vh;
   overflow-y: scroll;
-  margin-bottom: ${spacings.margins.sm};
+  margin-bottom: ${spacings.sm};
   align-items: flex-start;
 `;
 const StyledInputContainer = styled.div`

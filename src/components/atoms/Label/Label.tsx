@@ -1,5 +1,5 @@
 import React from "react";
-import { Label as StyledLabel } from "./Label.style";
+import { StyledLabel } from "./Label.style";
 
 export default function Label({
   children,

@@ -1,5 +1,5 @@
 import React from "react";
-import { Input as StyledInput } from "./Input.style";
+import { StyledInput } from "./Input.style";
 
 const Input = React.forwardRef<
   HTMLInputElement,

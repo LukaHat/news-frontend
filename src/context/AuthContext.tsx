@@ -3,7 +3,7 @@ import { useCookies } from "react-cookie";
 import { AuthUser } from "../types/AuthTypes";
 
 interface AuthContextType {
-  token: string | undefined;
+  token: string;
   isAuthenticated: boolean;
   user: AuthUser | undefined;
   addToken: (token: string) => void;
@@ -21,8 +21,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const user = cookies.user;
   const isAuthenticated = Boolean(token);
 
-  const addToken = (token: string | undefined) => {
-    setCookie("token", token, { path: "/" });
+  const addToken = (token: string) => {
+    setCookie("token", token, { path: "/", maxAge: 7200 });
   };
 
   const removeToken = () => {
@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const addUser = (user: AuthUser) => {
-    setCookie("user", user, { path: "/" });
+    setCookie("user", user, { path: "/", maxAge: 7200 });
   };
 
   return (

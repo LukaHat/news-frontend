@@ -12,7 +12,7 @@ const StyledComment = styled.p`
   width: 100%;
   height: auto;
   color: ${themeColors.primary.elementaryWhite};
-  margin: ${spacings.margins.xs} 0;
+  margin: ${spacings.xs} 0;
   padding: 0;
   ${typography.text.md}
 
@@ -24,7 +24,7 @@ const StyledComment = styled.p`
 
   span:nth-child(2) {
     ${typography.text.sm}
-    margin-bottom: ${spacings.margins.xs};
+    margin-bottom: ${spacings.xs};
     color: ${themeColors.secondary.expandedWhite};
   }
 `;

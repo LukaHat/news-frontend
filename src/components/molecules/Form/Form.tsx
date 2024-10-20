@@ -5,7 +5,7 @@ import { spacings } from "../../../theme/spacings";
 
 const StyledForm = styled.form`
   ${flexContainerColumn};
-  gap: ${spacings.gaps.sm};
+  gap: ${spacings.sm};
 `;
 
 export default function Form({

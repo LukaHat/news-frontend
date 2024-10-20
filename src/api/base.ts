@@ -1,8 +1,9 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 const baseAPIClient = axios.create({
   baseURL: "http://localhost:3000/",
 });
+//contants file/folder
 
 interface RequestProps {
   token?: string;
@@ -12,9 +13,7 @@ interface RequestProps {
   data?: unknown;
 }
 
-export const request = async <T>(
-  params: RequestProps
-): Promise<AxiosResponse<T>> => {
+export const request = async <T>(params: RequestProps): Promise<T> => {
   const { token, url, method, id, data } = params;
 
   try {
@@ -28,7 +27,7 @@ export const request = async <T>(
       },
     });
 
-    return res;
+    return res.data;
   } catch (error) {
     console.error(error);
     if (axios.isAxiosError(error)) {

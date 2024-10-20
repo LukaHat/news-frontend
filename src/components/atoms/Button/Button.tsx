@@ -1,5 +1,5 @@
 import React from "react";
-import { Button as StyledButton } from "./Button.style";
+import { StyledButton } from "./Button.style";
 
 export default function Button({
   children,
